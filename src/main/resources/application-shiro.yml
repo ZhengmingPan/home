@@ -1,0 +1,16 @@
+shiroFilter: 
+   loginUrl: /login
+   successUrl: /index
+   unauthorizedUrl: /static/errors/403.html
+   cacheManagerConfigFile: classpath:shiro/shiro-cache.xml
+   hashAlgorithmName: SHA-1
+   hashIterations: 1024
+   filterChainDefinitionMap: 
+      /logout: logout
+      /login: authc
+      /index: authc
+      /api/log/page: anon
+      /api/account/login: anon
+      /api/account/logout: anon
+      /api/account/current: anon
+      /api/**: authc
