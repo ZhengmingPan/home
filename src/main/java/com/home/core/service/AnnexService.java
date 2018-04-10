@@ -52,7 +52,6 @@ public class AnnexService extends JpaServiceImpl<Annex, String> {
 		annex.setCreator(CoreThreadContext.getUserId());
 		return super.save(annex);
 	}
- 
 
 	@Transactional(readOnly = false)
 	public Annex upload(byte[] data, String fileName, String objectId, String objectType, String path) {
@@ -66,10 +65,8 @@ public class AnnexService extends JpaServiceImpl<Annex, String> {
 		annex.setPath(filePath);
 		annex.setType(fileType);
 
-		try { 
-			FastDFSFile file = new FastDFSFile(fileName, data, fileType);
-			String[] fileAbsolutePath = FastDFSClient.upload(file);
-			String fastdfsUrl = FastDFSClient.getTrackerUrl() + fileAbsolutePath[0] + "/" + fileAbsolutePath[1];
+		try {
+			String fastdfsUrl = FastDFSClient.uploadByFileByte(fileName, data, fileType);
 			annex.setFastdfsUrl(fastdfsUrl);
 		} catch (Exception e) {
 			LOGGER.error("FastDFS 文件上传失败");
@@ -95,10 +92,8 @@ public class AnnexService extends JpaServiceImpl<Annex, String> {
 				List<Predicate> predicates = new ArrayList<>();
 
 				if (StringUtils.isNotEmpty(searchKey)) {
-					Predicate p1 = cb.like(root.get(Annex.PROP_PATH).as(String.class),
-							"%" + StringUtils.trimToEmpty(searchKey) + "%");
-					Predicate p2 = cb.like(root.get(Annex.PROP_NAME).as(String.class),
-							"%" + StringUtils.trimToEmpty(searchKey) + "%");
+					Predicate p1 = cb.like(root.get(Annex.PROP_PATH).as(String.class), "%" + StringUtils.trimToEmpty(searchKey) + "%");
+					Predicate p2 = cb.like(root.get(Annex.PROP_NAME).as(String.class), "%" + StringUtils.trimToEmpty(searchKey) + "%");
 					predicates.add(cb.or(p1, p2));
 				}
 				return cb.and(predicates.toArray(new Predicate[predicates.size()]));

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.springframework.http.MediaType;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Charsets;
@@ -98,7 +99,8 @@ public class ResponseUtils {
 			return;
 		}
 
-		response.reset();
+		response.setContentType("application/octet-stream"); 
+		response.reset(); 
 		ResponseUtils.setNoCacheHeader(response);
 		ResponseUtils.setFileDownloadHeader(response, fileName, String.valueOf(file.length()));
 

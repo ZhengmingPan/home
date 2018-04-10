@@ -1,15 +1,22 @@
 package com.home.core.web.endpoint;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +32,7 @@ import com.home.common.entity.ResponseResult;
 import com.home.common.utils.ResponseUtils;
 import com.home.core.entity.Annex;
 import com.home.core.service.AnnexService;
+import com.home.core.utils.FastDFSClient;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +46,7 @@ public class AnnexEndpoint {
 	private String root;
 	@Autowired
 	private AnnexService annexService;
+
 	@ApiOperation(value = "文件分页列表", httpMethod = "GET", produces = "application/json")
 	@GetMapping("page")
 	public @ResponseBody ResponseResult<Page<Annex>> page(PageQuery pageQuery) {
@@ -48,7 +57,7 @@ public class AnnexEndpoint {
 	@ApiOperation(value = "文件上传", httpMethod = "POST", produces = "application/json")
 	@PostMapping("upload")
 	public @ResponseBody ResponseResult<Annex> upload(@RequestParam("file") MultipartFile file, HttpServletResponse response) {
-  		Annex annex = new Annex();
+		Annex annex = new Annex();
 		try {
 			annex = annexService.upload(file.getBytes(), file.getOriginalFilename(), null, Annex.TEMP_PICTURE_TYPE, Annex.TEMP_PICTURE_PATH);
 		} catch (IOException e) {
@@ -56,8 +65,7 @@ public class AnnexEndpoint {
 		}
 		return ResponseResult.createSuccess(annex);
 	}
-	 
-	
+
 	@ApiOperation(value = "文件删除", httpMethod = "POST", produces = "application/json")
 	@PostMapping("remove")
 	public @ResponseBody ResponseResult<?> remove(String id) {
@@ -87,9 +95,28 @@ public class AnnexEndpoint {
 	}
 
 	private void handle(String path, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		File file = new File(root + path);
+ 		File file = new File(root + path);
 		Annex annex = annexService.getByPath(path);
 		String fileName = annex.getName();
-		ResponseUtils.download(file, fileName, request, response);
+		if (StringUtils.isNotEmpty(annex.getFastdfsUrl())) {
+			InputStream input = FastDFSClient.downloadFileByUrl(annex.getFastdfsUrl()); 
+			ResponseUtils.setNoCacheHeader(response);
+			ResponseUtils.setFileDownloadHeader(response, fileName, String.valueOf(file.length()));
+			OutputStream output = response.getOutputStream();
+			try {
+				input = new FileInputStream(file);
+				IOUtils.copy(input, output);
+				output.flush();
+			} catch (Exception e) {
+				ResponseUtils.download(file, fileName, request, response);
+				throw new Exception("FastDFS 文件下载失败");
+			} finally {
+				if (input != null) {
+					IOUtils.closeQuietly(input);
+				}
+			}
+		} else {
+			ResponseUtils.download(file, fileName, request, response);
+		}
 	}
 }

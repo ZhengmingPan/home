@@ -38,8 +38,14 @@ public class FastDFSClient {
 			LOGGER.error("FastDFS Client Init Fail!", e);
 		}
 	} 
+	 
 
-	public static String[] upload(FastDFSFile file) throws Exception {
+	public static String uploadByFileByte(String fileName, byte[] data, String fileType) throws Exception {
+		FastDFSFile file = new FastDFSFile(fileName, data, fileType);
+		return uploadFile(file);
+	}
+
+	public static String uploadFile(FastDFSFile file) throws Exception {
 		LOGGER.info("File Name: " + file.getName() + ", File Length: " + file.getContent().length);
 		;
 		NameValuePair[] meta_list = new NameValuePair[1];
@@ -52,21 +58,22 @@ public class FastDFSClient {
 			uploadResults = storageClient.upload_file(file.getContent(), file.getExt(), meta_list);
 		} catch (IOException e) {
 			LOGGER.error("IO Exception when uploading the file: " + file.getName(), e);
-		    throw new IOException();
+			throw new IOException();
 		} catch (Exception e) {
 			LOGGER.error("Non IO Exception when uploading the file: " + file.getName(), e);
-		    throw new Exception();
+			throw new Exception();
 		}
 		LOGGER.info("upload_file time used: " + (System.currentTimeMillis() - startTime) + "ms");
 
 		if (uploadResults == null) {
 			LOGGER.error("upload file fail, error code: " + storageClient.getErrorCode());
+			throw new Exception();
 		}
 		String groupName = uploadResults[0];
-		String remoteFileName = uploadResults[1];
-
+		String remoteFileName = uploadResults[1];  
 		LOGGER.info("upload file successfully !! group_name" + groupName + ", remotefileName: " + remoteFileName);
-		return uploadResults;
+		
+ 		return getTrackerUrl() + groupName + "/" + remoteFileName;
 	}
 
 	public static FileInfo getFile(String groupName, String remoteFileName) {
@@ -79,6 +86,13 @@ public class FastDFSClient {
 			LOGGER.error("IO Exception: Get File from Fast DFS failed", e);
 		}
 		return null;
+	}
+	
+	public static InputStream downloadFileByUrl(String fastdfsUrl) {
+		String path = fastdfsUrl.substring(fastdfsUrl.indexOf("group"));
+	    String groupName = path.split("/")[0];
+	    String remoteFileName = path.substring(path.indexOf("/")+1); 
+	    return downloadFile(groupName, remoteFileName);
 	}
 
 	public static InputStream downloadFile(String groupName, String remoteFileName) {
@@ -110,8 +124,7 @@ public class FastDFSClient {
 	}
 
 	public static String getTrackerUrl() {
-		return "http://" + trackerServer.getInetSocketAddress().getHostString() + ":"
-				+ ClientGlobal.getG_tracker_http_port() + "/";
+		return "http://" + trackerServer.getInetSocketAddress().getHostString() + ":" + ClientGlobal.getG_tracker_http_port() + "/";
 	}
 
 }
