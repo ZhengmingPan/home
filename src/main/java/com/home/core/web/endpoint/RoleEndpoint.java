@@ -1,6 +1,8 @@
 package com.home.core.web.endpoint;
 
+import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,7 +32,7 @@ public class RoleEndpoint {
 	private BaseUserService baseUserService;
 
 	@ApiOperation(value = "获取角色的分页列表", httpMethod = "GET", produces = "application/json")
-	@GetMapping("page")
+	@GetMapping("page") 
 	public ResponseResult<Page<Role>> page(PageQuery pageQuery) {
 		Page<Role> roles = roleService.page(pageQuery.getSearchKey(), pageQuery.buildPageRequest());
 		return ResponseResult.createSuccess(roles);
