@@ -1,3 +1,6 @@
+## home
+home 是一个基于springboot框架并整合shiro、redis、mybatis、jpa、hibernate、swagger等框架的Demo，并为management项目提供数据接口
+
 ## Welcome to GitHub Pages
 
 You can use the [editor on GitHub](https://github.com/ZhengmingPan/home/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
