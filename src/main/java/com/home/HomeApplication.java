@@ -8,13 +8,12 @@ import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomize
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jms.annotation.EnableJms;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.didispace.swagger.EnableSwagger2Doc;
-
-import de.codecentric.boot.admin.config.EnableAdminServer;
 
 //注销默认数据源配置
 @SpringBootApplication(scanBasePackages = { "com.home", "com.home.core.web" })
@@ -25,6 +24,7 @@ import de.codecentric.boot.admin.config.EnableAdminServer;
 @EnableAsync
 @EnableSwagger2Doc //接口文档生成
 @EnableCaching //缓存
+@EnableJms
 public class HomeApplication {
 
 	public static void main(String[] args) {
