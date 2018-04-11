@@ -3,11 +3,13 @@ package com.home.core.web.endpoint;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ import com.home.common.entity.PageQuery;
 import com.home.common.entity.ResponseResult;
 import com.home.common.utils.DownloadUtils;
 import com.home.core.entity.Annex;
+import com.home.core.service.ActiveMQClient;
 import com.home.core.service.AnnexService;
 import com.home.core.utils.FastDFSClient;
 
@@ -41,6 +44,8 @@ public class AnnexEndpoint {
 	private String root;
 	@Autowired
 	private AnnexService annexService;
+	@Autowired
+	private ActiveMQClient activeMQClient;
 
 	@ApiOperation(value = "文件分页列表", httpMethod = "GET", produces = "application/json")
 	@GetMapping("page")
@@ -55,6 +60,7 @@ public class AnnexEndpoint {
 		Annex annex = new Annex();
 		try {
 			annex = annexService.upload(file.getBytes(), file.getOriginalFilename(), null, Annex.TEMP_PICTURE_TYPE, Annex.TEMP_PICTURE_PATH);
+			activeMQClient.sendMessage(ActiveMQClient.QUEUE_NAME_TEST, annex.getName() + "于" + DateUtils.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss") + "上传成功");
 		} catch (IOException e) {
 			return ResponseResult.createError(HttpStatus.BAD_REQUEST, "文件上传失败");
 		}

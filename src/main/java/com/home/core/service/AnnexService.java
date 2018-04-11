@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Function;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -30,7 +29,6 @@ import com.home.common.utils.FileUploadUtils;
 import com.home.core.entity.Annex;
 import com.home.core.repository.jpa.AnnexDao;
 import com.home.core.utils.FastDFSClient;
-import com.home.core.vo.FastDFSFile;
 import com.home.core.web.CoreThreadContext;
 
 @Service
@@ -52,7 +50,7 @@ public class AnnexService extends JpaServiceImpl<Annex, String> {
 		annex.setCreator(CoreThreadContext.getUserId());
 		return super.save(annex);
 	}
-
+	
 	@Transactional(readOnly = false)
 	public Annex upload(byte[] data, String fileName, String objectId, String objectType, String path) {
 		String fileType = FilenameUtils.getExtension(fileName).toLowerCase(Locale.ENGLISH);
