@@ -15,7 +15,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
@@ -76,6 +75,7 @@ public class MimeMessageUtils {
 		return contentText;
 	}
 	 
+	@SuppressWarnings("unused")
 	private static void appendContent(Part part, StringBuffer content) throws IOException, MessagingException { 
  		String contentType = part.getContentType();
 		if(contentType.startsWith("text/")) {
