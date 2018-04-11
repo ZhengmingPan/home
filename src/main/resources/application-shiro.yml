@@ -9,7 +9,6 @@ shiroFilter:
       /logout: logout
       /login: authc
       /index: authc
-      /api/log/page: anon
       /api/account/login: anon
       /api/account/logout: anon
       /api/account/current: anon
