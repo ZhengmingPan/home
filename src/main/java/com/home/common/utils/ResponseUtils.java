@@ -1,19 +1,12 @@
 package com.home.common.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.springframework.http.MediaType;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Charsets;
@@ -49,16 +42,18 @@ public class ResponseUtils {
 
 	public static void setFileDownloadHeader(HttpServletResponse response, String fileName) {
 		String encodedfileName = new String(fileName.getBytes(Charsets.UTF_8), Charsets.ISO_8859_1);
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedfileName + "\"");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedfileName + "\""); 
+		setFileDownloadMimeTypeHeader(fileName, response);
 	}
 
 	public static void setFileDownloadHeader(HttpServletResponse response, String fileName, String fileLength) {
 		String encodedfileName = new String(fileName.getBytes(Charsets.UTF_8), Charsets.ISO_8859_1);
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedfileName + "\"");
 		response.setHeader("Content-Length", fileLength);
+		setFileDownloadMimeTypeHeader(fileName, response);
 	}
 
-	public static void download(File file, String fileName, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	private static void setFileDownloadMimeTypeHeader(String fileName, HttpServletResponse response) {
 		String fileType = FilenameUtils.getExtension(fileName).toLowerCase(Locale.ENGLISH);
 		// ---------------------------------------------------------------
 		// 设置MIME
@@ -91,31 +86,6 @@ public class ResponseUtils {
 			response.setContentType("application/zip");
 		} else {
 			response.setContentType("multipart/form-data");
-		}
-
-		if (!file.exists() || !file.canRead()) {
-			response.setContentType("text/html;charset=utf-8");
-			response.getWriter().write("您下载的文件不存在！");
-			return;
-		}
-
-		response.setContentType("application/octet-stream"); 
-		response.reset(); 
-		ResponseUtils.setNoCacheHeader(response);
-		ResponseUtils.setFileDownloadHeader(response, fileName, String.valueOf(file.length()));
-
-		InputStream input = null;
-		OutputStream output = response.getOutputStream();
-		try {
-			input = new FileInputStream(file);
-			// 基于byte数组读取InputStream并直接写入OutputStream, 数组默认大小为4k.
-			IOUtils.copy(input, output);
-			output.flush();
-		} finally {
-			if (input != null) {
-				// 保证InputStream的关闭.
-				IOUtils.closeQuietly(input);
-			}
 		}
 	}
 

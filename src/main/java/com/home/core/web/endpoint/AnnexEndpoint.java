@@ -1,22 +1,17 @@
 package com.home.core.web.endpoint;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.home.common.entity.PageQuery;
 import com.home.common.entity.ResponseResult;
-import com.home.common.utils.ResponseUtils;
+import com.home.common.utils.DownloadUtils;
 import com.home.core.entity.Annex;
 import com.home.core.service.AnnexService;
 import com.home.core.utils.FastDFSClient;
@@ -95,28 +90,19 @@ public class AnnexEndpoint {
 	}
 
 	private void handle(String path, HttpServletRequest request, HttpServletResponse response) throws Exception {
- 		File file = new File(root + path);
+		File file = new File(root + path);
 		Annex annex = annexService.getByPath(path);
 		String fileName = annex.getName();
 		if (StringUtils.isNotEmpty(annex.getFastdfsUrl())) {
-			InputStream input = FastDFSClient.downloadFileByUrl(annex.getFastdfsUrl()); 
-			ResponseUtils.setNoCacheHeader(response);
-			ResponseUtils.setFileDownloadHeader(response, fileName, String.valueOf(file.length()));
-			OutputStream output = response.getOutputStream();
+			InputStream input = FastDFSClient.downloadFileByUrl(annex.getFastdfsUrl());
 			try {
-				input = new FileInputStream(file);
-				IOUtils.copy(input, output);
-				output.flush();
+				DownloadUtils.downloadByInputStream(input, fileName, request, response);
 			} catch (Exception e) {
-				ResponseUtils.download(file, fileName, request, response);
+				DownloadUtils.downloadByFile(file, fileName, request, response);
 				throw new Exception("FastDFS 文件下载失败");
-			} finally {
-				if (input != null) {
-					IOUtils.closeQuietly(input);
-				}
 			}
 		} else {
-			ResponseUtils.download(file, fileName, request, response);
+			DownloadUtils.downloadByFile(file, fileName, request, response);
 		}
 	}
 }
