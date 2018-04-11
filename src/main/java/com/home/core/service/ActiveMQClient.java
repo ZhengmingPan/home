@@ -8,7 +8,7 @@ import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Service;
 
-@Service("producer")
+@Service
 public class ActiveMQClient {
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(ActiveMQClient.class);
@@ -20,15 +20,19 @@ public class ActiveMQClient {
 	@Autowired
 	private JmsMessagingTemplate jmsTemplate;
 
+	public void sendMessage(Object message) {
+		sendMessage(QUEUE_NAME_TEST, message);
+	}
+	
 	/**
 	 * 发送消息
 	 * 
-	 * @param destination
+	 * @param destinationString
 	 *            发送的目的队列
 	 * @param message
 	 *            消息内容
 	 */
-	public void sendMessage(String queueName, String message) {
+	public void sendMessage(String queueName, Object message) {
 		jmsTemplate.convertAndSend(queueName, message);
 	}
 	
