@@ -25,7 +25,7 @@ import com.home.core.entity.Role;
 import com.home.core.entity.User;
 import com.home.core.entity.UserGroup;
 
-public class AuthRealm extends AuthorizingRealm {
+public class ShiroAuthRealm extends AuthorizingRealm {
 
 	@Autowired
 	private UserService userService;

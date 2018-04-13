@@ -35,8 +35,6 @@ public class AccountEndpoint {
 	private BaseUserService baseUserService;
 	@Autowired
 	private TokenService tokenService;
-	@Autowired
-	private ActiveMQClient activeMQClient;
 
 	@ApiOperation(value = "用户登陆", httpMethod = "POST", produces = "application/json")
 	@PostMapping("login")
@@ -49,7 +47,7 @@ public class AccountEndpoint {
 		return ResponseResult.createSuccess(user);
 	}
 
-	@ApiOperation(value = "用户登陆", httpMethod = "POST", produces = "application/json")
+	@ApiOperation(value = "退出登录", httpMethod = "POST", produces = "application/json")
 	@PostMapping("logout")
 	public ResponseResult<?> logout() {
 		Subject subject = SecurityUtils.getSubject();
@@ -59,8 +57,7 @@ public class AccountEndpoint {
 
 	@ApiOperation(value = "获取当前用户信息", httpMethod = "GET", produces = "application/json")
 	@GetMapping("current")
-	public ResponseResult<?> current() {
-
+	public ResponseResult<?> current() { 
 		Long userId = CoreThreadContext.getUserId();
 		BaseUser user = null;
 		if (userId != null) {

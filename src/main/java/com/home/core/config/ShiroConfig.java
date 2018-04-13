@@ -21,7 +21,7 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 
 import com.home.core.filter.PasswordAuthenFilter;
 import com.home.core.filter.SystemLogoutFilter;
-import com.home.core.service.AuthRealm;
+import com.home.core.service.ShiroAuthRealm;
 import com.home.core.vo.ShiroPreference;
 
 /**
@@ -74,7 +74,7 @@ public class ShiroConfig {
 
 	// 配置核心安全事务管理器
 	@Bean(name = "securityManager")
-	public SecurityManager securityManager(@Qualifier("authRealm") AuthRealm authRealm) {
+	public SecurityManager securityManager(@Qualifier("authRealm") ShiroAuthRealm authRealm) {
 		DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
 		manager.setRealm(authRealm);
 		return manager;
@@ -82,8 +82,8 @@ public class ShiroConfig {
 
 	// 配置自定义的权限登录器
 	@Bean(name = "authRealm")
-	public AuthRealm authRealm(@Qualifier("hashedCredentialsMatcher") HashedCredentialsMatcher matcher, @Qualifier("cacheManager") EhCacheManager cacheManager) {
-		AuthRealm authRealm = new AuthRealm();
+	public ShiroAuthRealm authRealm(@Qualifier("hashedCredentialsMatcher") HashedCredentialsMatcher matcher, @Qualifier("cacheManager") EhCacheManager cacheManager) {
+		ShiroAuthRealm authRealm = new ShiroAuthRealm();
 		authRealm.setCredentialsMatcher(matcher);
 		authRealm.setCacheManager(cacheManager);
 		return authRealm;
