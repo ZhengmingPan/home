@@ -244,7 +244,7 @@ public class ActiveMQClient {
 			ActiveMQObjectMessage objMessage = (ActiveMQObjectMessage) session.createObjectMessage(message);
 			// 设置延迟时间
 			objMessage.setProperties(scheduled.getPropertiesMap());
-			// 发送
+			// 发送 
 			sender.send(objMessage);
 			session.commit();
 			sender.close();
@@ -275,8 +275,8 @@ public class ActiveMQClient {
 			ActiveMQObjectMessage objMessage = (ActiveMQObjectMessage) session.createObjectMessage(message);
 			// 设置延迟时间
 			objMessage.setProperties(scheduled.getPropertiesMap());
-			// 发送
-			publisher.send(objMessage);
+			// 发送 
+			publisher.publish(objMessage);
 			session.commit();
 			publisher.close();
 			LOGGER.info("JMS定時发送成功！！ 内容：" + message);
