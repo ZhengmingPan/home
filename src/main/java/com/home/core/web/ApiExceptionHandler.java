@@ -1,13 +1,12 @@
 package com.home.core.web;
 
-import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.authz.AuthorizationException;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,6 @@ import com.home.common.entity.ResponseResult;
 import com.home.common.utils.RequestUtils;
 import com.home.core.entity.Log;
 import com.home.core.service.LogService;
-
-import io.swagger.annotations.ApiOperation;
 
 /**
  * Controller增强器 Api统一返回json形式的异常信息
@@ -53,7 +50,7 @@ public class ApiExceptionHandler {
 			result = ResponseResult.createError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
 		}
 		logError(ex, request, result);
-		return new ResponseEntity<>(result, headers, HttpStatus.OK);
+		return new ResponseEntity<>(result, headers, HttpStatus.FORBIDDEN);
 	}
 
 	private void logError(Exception ex, HttpServletRequest request, ResponseResult<?> result) throws Exception {
@@ -62,8 +59,7 @@ public class ApiExceptionHandler {
 		map.put("from", RequestUtils.getIpAddress(request));
 		map.put("path", request.getRequestURL().toString());
 		LOGGER.error(JSON.toJSONString(map), ex);
-
-		// 获取request
+ 
 		Log log = new Log();
 		log.setIp(RequestUtils.getIpAddress(request));
 		log.setDescription(request.getMethod());
@@ -72,6 +68,7 @@ public class ApiExceptionHandler {
 		log.setUserAgent(request.getHeader("User-Agent"));
 		log.setParameter(request.getQueryString());
 		log.setResult(JSON.toJSONString(result));
+		log.setLogTime(new Date());
 		log.setUsername(CoreThreadContext.getUserName());
 		logService.save(log);
 	}

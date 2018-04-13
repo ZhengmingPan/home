@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.http.client.utils.DateUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,11 @@ public class AccountEndpoint {
 	@PostMapping("login")
 	public ResponseResult<?> login(String username, String password, String terminal, HttpServletResponse response) {
 		Subject subject = SecurityUtils.getSubject();
-		subject.login(new UsernamePasswordToken(username, password));
+		try {
+			subject.login(new UsernamePasswordToken(username, password));
+		} catch (IncorrectCredentialsException e) {
+			throw new IncorrectCredentialsException("用户名或密码错误");
+		}
 		BaseUser user = baseUserService.getByLoginName(username);
 		String token = tokenService.apply(user.getId(), terminal, "");
 		response.setHeader("token", token);
@@ -57,7 +62,7 @@ public class AccountEndpoint {
 
 	@ApiOperation(value = "获取当前用户信息", httpMethod = "GET", produces = "application/json")
 	@GetMapping("current")
-	public ResponseResult<?> current() { 
+	public ResponseResult<?> current() {
 		Long userId = CoreThreadContext.getUserId();
 		BaseUser user = null;
 		if (userId != null) {

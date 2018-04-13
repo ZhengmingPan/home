@@ -26,8 +26,7 @@ import com.home.core.repository.jpa.LogDao;
 public class LogService extends JpaServiceImpl<Log, String> {
 
 	@Autowired
-	private LogDao logDao; 
-
+	private LogDao logDao;  
 
 	public Page<Log> page(final Date startTime, final Date endTime, final String searchKey, Pageable page) {
 		return logDao.findAll(new Specification<Log>() {

@@ -8,6 +8,7 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.ExpiredCredentialsException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -34,8 +35,7 @@ public class ShiroAuthRealm extends AuthorizingRealm {
 
 	// 认证.登录
 	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken)
-			throws AuthenticationException {
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
 		String username = (String) authcToken.getPrincipal();
 		User user = null;
 		if (StringUtil.isEmpty(username)) {
@@ -61,11 +61,15 @@ public class ShiroAuthRealm extends AuthorizingRealm {
 			shiroUser.setId(user.getId());
 			shiroUser.setLoginName(username);
 			shiroUser.setName(user.getName());
-			if (StringUtil.isNotEmpty(user.getSalt())) {
-				return new SimpleAuthenticationInfo(shiroUser, user.getPassword(),
-						ByteSource.Util.bytes(user.getSalt()), getName());
-			} else {
-				return new SimpleAuthenticationInfo(shiroUser, user.getPassword(), getName());
+
+			try {
+				if (StringUtil.isNotEmpty(user.getSalt())) {
+					return new SimpleAuthenticationInfo(shiroUser, user.getPassword(), ByteSource.Util.bytes(user.getSalt()), getName());
+				} else {
+					return new SimpleAuthenticationInfo(shiroUser, user.getPassword(), getName());
+				}
+			} catch (IncorrectCredentialsException e) {
+				 throw new IncorrectCredentialsException("用户名或密码错误");
 			}
 		} else {
 			throw new UnknownAccountException("账号不存在");
@@ -88,7 +92,7 @@ public class ShiroAuthRealm extends AuthorizingRealm {
 		}
 		for (UserGroup group : userGroups) {
 			List<Role> groupRole = group.getRoles();
-			for (Role role : groupRole) { 
+			for (Role role : groupRole) {
 				info.addRole(role.getCode());
 				for (Permission permission : role.getPermissions()) {
 					info.addStringPermission(permission.getCode());
