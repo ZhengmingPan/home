@@ -1,15 +1,18 @@
 package com.home.common.entity;
 
+import java.io.Serializable;
+
 import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+@SuppressWarnings("serial")
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class ResponseResult<T> {
+public class ResponseResult<T>  implements Serializable {
 
 	private Integer code; // 状态码
 

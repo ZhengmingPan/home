@@ -64,7 +64,7 @@ public class AnnexService extends JpaServiceImpl<Annex, String> {
 		annex.setType(fileType);
 
 		try {
-			String fastdfsUrl = FastDFSClient.uploadByFileByte(fileName, data, fileType);
+			String fastdfsUrl = FastDFSClient.uploadByFileByte(fileName, data);
 			annex.setFastdfsUrl(fastdfsUrl);
 		} catch (Exception e) {
 			LOGGER.error("FastDFS 文件上传失败");

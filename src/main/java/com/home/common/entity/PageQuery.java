@@ -1,5 +1,7 @@
 package com.home.common.entity;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -11,12 +13,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@SuppressWarnings("serial")
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true)
 @ApiModel(description = "分页查询")
-public class PageQuery {
+public class PageQuery implements Serializable {
 
 	@ApiModelProperty(value = "页码", required = true)
 	private Integer pageNo;

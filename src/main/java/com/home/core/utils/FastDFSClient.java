@@ -3,7 +3,9 @@ package com.home.core.utils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
+import org.apache.commons.io.FilenameUtils;
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.ClientGlobal;
 import org.csource.fastdfs.FileInfo;
@@ -18,6 +20,12 @@ import org.springframework.core.io.ClassPathResource;
 
 import com.home.core.vo.FastDFSFile;
 
+/**
+ * FastDFS分布式文件上传和下载客户端工具类
+ * 
+ * @author Administrator
+ *
+ */
 public class FastDFSClient {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(FastDFSClient.class);
@@ -27,6 +35,9 @@ public class FastDFSClient {
 	private static StorageClient storageClient;
 	private static StorageServer storageServer;
 
+	/**
+	 * 建立于FastDFS服务器连接
+	 */
 	static {
 		try {
 			String filePath = new ClassPathResource("fdfs_client.conf").getFile().getAbsolutePath();
@@ -37,17 +48,30 @@ public class FastDFSClient {
 		} catch (Exception e) {
 			LOGGER.error("FastDFS Client Init Fail!", e);
 		}
-	} 
-	 
+	}
 
-	public static String uploadByFileByte(String fileName, byte[] data, String fileType) throws Exception {
+	/**
+	 * 将文件信息装换为<code>FastDFSClient</code>并文件通过字节码上传
+	 * @param fileName  文件名
+	 * @param data  文件流字节码
+	 * @param fileType  文件类型
+	 * @return
+	 * @throws Exception
+	 */
+	public static String uploadByFileByte(String fileName, byte[] data) throws Exception {
+		String fileType = FilenameUtils.getExtension(fileName).toLowerCase(Locale.ENGLISH);
 		FastDFSFile file = new FastDFSFile(fileName, data, fileType);
 		return uploadFile(file);
 	}
-
-	public static String uploadFile(FastDFSFile file) throws Exception {
-		LOGGER.info("File Name: " + file.getName() + ", File Length: " + file.getContent().length);
-		;
+ 
+	/**
+	 * 文件上传值FastDFS
+	 * @param file
+	 * @return 文件在FastDFS上的全路径
+	 * @throws Exception
+	 */
+	private static String uploadFile(FastDFSFile file) throws Exception {
+		LOGGER.info("File Name: " + file.getName() + ", File Length: " + file.getContent().length); 
 		NameValuePair[] meta_list = new NameValuePair[1];
 		meta_list[0] = new NameValuePair("author", file.getAuthor());
 
@@ -70,10 +94,10 @@ public class FastDFSClient {
 			throw new Exception();
 		}
 		String groupName = uploadResults[0];
-		String remoteFileName = uploadResults[1];  
+		String remoteFileName = uploadResults[1];
 		LOGGER.info("upload file successfully !! group_name" + groupName + ", remotefileName: " + remoteFileName);
-		
- 		return getTrackerUrl() + groupName + "/" + remoteFileName;
+
+		return getTrackerUrl() + groupName + "/" + remoteFileName;
 	}
 
 	public static FileInfo getFile(String groupName, String remoteFileName) {
@@ -87,15 +111,20 @@ public class FastDFSClient {
 		}
 		return null;
 	}
-	
+
+	/**
+	 * 根据FastDFS文件地址下载获取输入流
+	 * @param fastdfsUrl
+	 * @return
+	 */
 	public static InputStream downloadFileByUrl(String fastdfsUrl) {
 		String path = fastdfsUrl.substring(fastdfsUrl.indexOf("group"));
-	    String groupName = path.split("/")[0];
-	    String remoteFileName = path.substring(path.indexOf("/")+1); 
-	    return downloadFile(groupName, remoteFileName);
+		String groupName = path.split("/")[0];
+		String remoteFileName = path.substring(path.indexOf("/") + 1);
+		return downloadFile(groupName, remoteFileName);
 	}
 
-	public static InputStream downloadFile(String groupName, String remoteFileName) {
+	private static InputStream downloadFile(String groupName, String remoteFileName) {
 		try {
 			storageClient = new StorageClient(trackerServer, storageServer);
 			byte[] fileByte = storageClient.download_file(groupName, remoteFileName);
@@ -109,7 +138,20 @@ public class FastDFSClient {
 		return null;
 	}
 
-	public static void deleteFile(String groupName, String remoteFileName) throws Exception {
+	/**
+	 * 将文件从FastDFS服务器上删除
+	 * @param groupName
+	 * @param remoteFileName
+	 * @throws Exception
+	 */
+	public static void deleteFileByUrl(String fastdfsUrl) throws Exception {
+		String path = fastdfsUrl.substring(fastdfsUrl.indexOf("group"));
+		String groupName = path.split("/")[0];
+		String remoteFileName = path.substring(path.indexOf("/") + 1);
+		deleteFile(groupName, remoteFileName);
+	}
+	
+	private static void deleteFile(String groupName, String remoteFileName) throws Exception {
 		storageClient = new StorageClient(trackerServer, storageServer);
 		int i = storageClient.delete_file(groupName, remoteFileName);
 		LOGGER.info("delete file successfully!!!" + i);
@@ -123,7 +165,7 @@ public class FastDFSClient {
 		return trackerClient.getFetchStorages(trackerServer, groupName, remoteFileName);
 	}
 
-	public static String getTrackerUrl() {
+	private static String getTrackerUrl() {
 		return "http://" + trackerServer.getInetSocketAddress().getHostString() + ":" + ClientGlobal.getG_tracker_http_port() + "/";
 	}
 

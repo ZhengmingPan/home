@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.apache.shiro.crypto.hash.SimpleHash;
 
@@ -42,7 +43,7 @@ public class MailAccount extends IdEntity {
 	 
 	public static final String HASH_ALGORITHM_NAME = "SHA-1";
 	public static final Integer HASH_ITERATIONS = 1024;
-
+ 
 	private String username;
 	private String password;
 	private String name;
