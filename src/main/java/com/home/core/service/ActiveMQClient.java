@@ -281,7 +281,7 @@ public class ActiveMQClient {
 			publisher.close();
 			LOGGER.info("JMS定時发送成功！！ 内容：" + message);
 		} catch (JMSException e) {
-			LOGGER.error("Topic延时发布失败," + e.getMessage());
+			LOGGER.error("Topic延时发布失败," + e.getMessage()); 
 		}
 	}
 
