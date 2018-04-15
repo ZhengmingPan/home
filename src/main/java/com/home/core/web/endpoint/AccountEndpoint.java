@@ -1,16 +1,20 @@
 package com.home.core.web.endpoint;
 
-import java.util.Date;
+import java.io.IOException;
 
-import javax.jms.JMSException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.activemq.command.ActiveMQQueue;
-import org.apache.http.client.utils.DateUtils;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.home.common.entity.ResponseResult;
 import com.home.core.entity.BaseUser;
-import com.home.core.service.ActiveMQClient;
 import com.home.core.service.BaseUserService;
 import com.home.core.service.TokenService;
 import com.home.core.web.CoreThreadContext;
@@ -31,11 +34,13 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/api/account")
 public class AccountEndpoint {
-
+	
+	private static Logger LOGGER = LoggerFactory.getLogger(AccountEndpoint.class);
+	
 	@Autowired
 	private BaseUserService baseUserService;
 	@Autowired
-	private TokenService tokenService;
+	private TokenService tokenService; 
 
 	@ApiOperation(value = "用户登陆", httpMethod = "POST", produces = "application/json")
 	@PostMapping("login")
@@ -62,7 +67,7 @@ public class AccountEndpoint {
 
 	@ApiOperation(value = "获取当前用户信息", httpMethod = "GET", produces = "application/json")
 	@GetMapping("current")
-	public ResponseResult<?> current() {
+	public ResponseResult<?> current() throws ClientProtocolException, IOException { 
 		Long userId = CoreThreadContext.getUserId();
 		BaseUser user = null;
 		if (userId != null) {

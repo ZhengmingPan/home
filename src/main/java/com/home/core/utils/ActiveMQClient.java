@@ -1,4 +1,4 @@
-package com.home.core.service;
+package com.home.core.utils;
 
 import java.io.Serializable;
 
