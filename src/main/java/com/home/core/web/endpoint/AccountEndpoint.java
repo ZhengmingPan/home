@@ -1,14 +1,7 @@
 package com.home.core.web.endpoint;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -25,6 +18,7 @@ import com.home.common.entity.ResponseResult;
 import com.home.core.entity.BaseUser;
 import com.home.core.service.BaseUserService;
 import com.home.core.service.TokenService;
+import com.home.core.utils.HttpClient;
 import com.home.core.web.CoreThreadContext;
 
 import io.swagger.annotations.Api;
@@ -41,6 +35,8 @@ public class AccountEndpoint {
 	private BaseUserService baseUserService;
 	@Autowired
 	private TokenService tokenService; 
+	/*@Autowired
+	private HttpClient httpClient;*/
 
 	@ApiOperation(value = "用户登陆", httpMethod = "POST", produces = "application/json")
 	@PostMapping("login")
@@ -65,9 +61,13 @@ public class AccountEndpoint {
 		return ResponseResult.SUCCEED;
 	}
 
+	@Autowired
+	private HttpClient httpClient;
+	
 	@ApiOperation(value = "获取当前用户信息", httpMethod = "GET", produces = "application/json")
 	@GetMapping("current")
-	public ResponseResult<?> current() throws ClientProtocolException, IOException { 
+	public ResponseResult<?> current() { 
+		httpClient.demo();
 		Long userId = CoreThreadContext.getUserId();
 		BaseUser user = null;
 		if (userId != null) {
