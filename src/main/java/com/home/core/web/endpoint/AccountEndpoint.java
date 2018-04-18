@@ -7,6 +7,9 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +27,12 @@ import io.swagger.annotations.ApiOperation;
 @Api(description = "登录接口")
 @RestController
 @RequestMapping("/api/account")
-public class AccountEndpoint {
-	 
-	
+public class AccountEndpoint { 
+
 	@Autowired
 	private BaseUserService baseUserService;
 	@Autowired
-	private TokenService tokenService;  
+	private TokenService tokenService;
 
 	@ApiOperation(value = "用户登陆", httpMethod = "POST", produces = "application/json")
 	@PostMapping("login")
@@ -53,11 +55,11 @@ public class AccountEndpoint {
 		Subject subject = SecurityUtils.getSubject();
 		subject.logout();
 		return ResponseResult.SUCCEED;
-	} 
-	
+	}
+
 	@ApiOperation(value = "获取当前用户信息", httpMethod = "GET", produces = "application/json")
 	@GetMapping("current")
-	public ResponseResult<?> current() {  
+	public ResponseResult<?> current() {
 		Long userId = CoreThreadContext.getUserId();
 		BaseUser user = null;
 		if (userId != null) {
@@ -65,5 +67,11 @@ public class AccountEndpoint {
 		}
 		return ResponseResult.createSuccess(user);
 	}
+	
+	 @MessageMapping("/welcome") //当浏览器向服务端发送请求时,通过@MessageMapping映射/welcome这个地址,类似于@ResponseMapping
+     @SendTo("/topic/getResponse")//当服务器有消息时,会对订阅了@SendTo中的路径的浏览器发送消息
+     public ResponseResult say() { 
+         return ResponseResult.createError(HttpStatus.ACCEPTED, "websocket");
+     }
 
 }
