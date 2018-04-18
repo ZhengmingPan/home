@@ -6,8 +6,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +16,6 @@ import com.home.common.entity.ResponseResult;
 import com.home.core.entity.BaseUser;
 import com.home.core.service.BaseUserService;
 import com.home.core.service.TokenService;
-import com.home.core.utils.HttpClient;
 import com.home.core.web.CoreThreadContext;
 
 import io.swagger.annotations.Api;
@@ -28,15 +25,12 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/api/account")
 public class AccountEndpoint {
-	
-	private static Logger LOGGER = LoggerFactory.getLogger(AccountEndpoint.class);
+	 
 	
 	@Autowired
 	private BaseUserService baseUserService;
 	@Autowired
-	private TokenService tokenService; 
-	/*@Autowired
-	private HttpClient httpClient;*/
+	private TokenService tokenService;  
 
 	@ApiOperation(value = "用户登陆", httpMethod = "POST", produces = "application/json")
 	@PostMapping("login")
@@ -59,10 +53,7 @@ public class AccountEndpoint {
 		Subject subject = SecurityUtils.getSubject();
 		subject.logout();
 		return ResponseResult.SUCCEED;
-	}
-
-	@Autowired
-	private HttpClient httpClient;
+	} 
 	
 	@ApiOperation(value = "获取当前用户信息", httpMethod = "GET", produces = "application/json")
 	@GetMapping("current")
