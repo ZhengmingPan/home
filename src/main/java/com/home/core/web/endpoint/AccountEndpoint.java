@@ -66,8 +66,7 @@ public class AccountEndpoint {
 	
 	@ApiOperation(value = "获取当前用户信息", httpMethod = "GET", produces = "application/json")
 	@GetMapping("current")
-	public ResponseResult<?> current() { 
-		httpClient.demo();
+	public ResponseResult<?> current() {  
 		Long userId = CoreThreadContext.getUserId();
 		BaseUser user = null;
 		if (userId != null) {
