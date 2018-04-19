@@ -94,8 +94,8 @@ public class AnnexEndpoint {
 		Annex annex = annexService.getByPath(path);
 		String fileName = annex.getName();
 		if (StringUtils.isNotEmpty(annex.getFastdfsUrl())) {
-			InputStream input = FastDFSClient.downloadFileByUrl(annex.getFastdfsUrl());
-			try {
+			try { 
+				InputStream input = FastDFSClient.downloadFileByUrl(annex.getFastdfsUrl());
 				DownloadUtils.downloadByInputStream(input, fileName, request, response);
 			} catch (Exception e) {
 				DownloadUtils.downloadByFile(file, fileName, request, response);
