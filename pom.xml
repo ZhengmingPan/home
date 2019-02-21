@@ -26,7 +26,7 @@
 		<commons-lang3.version>3.5</commons-lang3.version>
 		<commons-io.version>2.5</commons-io.version>
 		<commons-codec.version>1.10</commons-codec.version>
-		<commons-fileupload.version>RELEASE</commons-fileupload.version>
+		<commons-fileupload.version>1.4</commons-fileupload.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
 		<shiro.version>1.2.1</shiro.version>
@@ -34,7 +34,7 @@
 		<de.codecentric.version>1.5.6</de.codecentric.version>
 		<quartz.version>2.2.1</quartz.version>
 		<httpclient.version>4.5.2</httpclient.version>
-		<fastjson.version>RELEASE</fastjson.version>
+		<fastjson.version>1.2.47</fastjson.version>
 		<fastdfs.version>1.27</fastdfs.version>
 		<druid.version>1.1.10</druid.version>
 	</properties>
