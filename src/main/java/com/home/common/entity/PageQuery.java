@@ -49,11 +49,11 @@ public class PageQuery implements Serializable {
 		int size = this.pageSize != null ? this.pageSize : pageSize;
 
 		if (StringUtils.isEmpty(sortBy)) {
-			return new PageRequest(page, size, defaultSort);
+			return PageRequest.of(page, size, defaultSort);
 		} else {
 			Sort.Direction direction = StringUtils.isNotEmpty(sortDir) ? Sort.Direction.fromString(sortDir) : Sort.Direction.DESC;
 			String[] properties = StringUtils.split(sortBy, ",");
-			return new PageRequest(page, size, direction, properties);
+			return PageRequest.of(page, size, direction, properties);
 		}
 	}
 

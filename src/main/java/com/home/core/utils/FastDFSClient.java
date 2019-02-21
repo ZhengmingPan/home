@@ -54,7 +54,6 @@ public class FastDFSClient {
 	 * 将文件信息装换为<code>FastDFSClient</code>并文件通过字节码上传
 	 * @param fileName  文件名
 	 * @param data  文件流字节码
-	 * @param fileType  文件类型
 	 * @return
 	 * @throws Exception
 	 */
@@ -140,8 +139,7 @@ public class FastDFSClient {
 
 	/**
 	 * 将文件从FastDFS服务器上删除
-	 * @param groupName
-	 * @param remoteFileName
+	 * @param fastdfsUrl
 	 * @throws Exception
 	 */
 	public static void deleteFileByUrl(String fastdfsUrl) throws Exception {

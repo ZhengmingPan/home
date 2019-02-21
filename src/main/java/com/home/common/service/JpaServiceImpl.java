@@ -18,7 +18,7 @@ public abstract class JpaServiceImpl<T, ID extends Serializable> implements JpaS
 
 	@Override
 	public T get(ID id) {
-		return dao.findOne(id);
+		return dao.findById(id).orElse(null);
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public abstract class JpaServiceImpl<T, ID extends Serializable> implements JpaS
 	@Override
 	@Transactional(readOnly = false)
 	public void delete(ID id) {
-		dao.delete(id);
+		dao.deleteById(id);
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public abstract class JpaServiceImpl<T, ID extends Serializable> implements JpaS
 	@Override
 	@Transactional(readOnly = false)
 	public void saveAll(List<T> entities) { 
-		dao.save(entities);
+		dao.saveAll(entities);
 	}
 
 }

@@ -85,18 +85,7 @@ public class User extends IdEntity {
 
 	public User(Long id) {
 		this.id = id;
-	}
-
-	@Transient
-	public List<String> getRoleCodes() {
-		List<String> roleCodes = new ArrayList<>();
-		if (roles != null && !roles.isEmpty()) {
-			for (Role role : roles) {
-				roleCodes.add(role.getCode());
-			}
-		}
-		return roleCodes;
-	}
+	} 
 
 	@Transient
 	public boolean isEnabled() {

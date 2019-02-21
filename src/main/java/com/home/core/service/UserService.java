@@ -30,9 +30,9 @@ import com.home.core.repository.jpa.UserDao;
 @Transactional(readOnly = true)
 public class UserService extends JpaServiceImpl<User, Long> {
 
-	@Value("${shiroFilter.hashAlgorithmName}")
+	@Value("${shiro.hashAlgorithmName}")
 	private String hashAlgorithmName;
-	@Value("${shiroFilter.hashIterations}")
+	@Value("${shiro.hashIterations}")
 	private int hashIterations;
 
 	@Autowired

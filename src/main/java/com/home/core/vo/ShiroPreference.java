@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "shiroFilter")
+@ConfigurationProperties(prefix = "shiro")
 public class ShiroPreference {
 
 	private String loginUrl;

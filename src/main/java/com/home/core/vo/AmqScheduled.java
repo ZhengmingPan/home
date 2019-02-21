@@ -68,7 +68,7 @@ public class AmqScheduled {
 	/**
 	 * 验证Cron表达式是否合法
 	 * 
-	 * @param item
+	 * @param cron
 	 * @return
 	 */
 	private static boolean validCronExpression(String cron) {

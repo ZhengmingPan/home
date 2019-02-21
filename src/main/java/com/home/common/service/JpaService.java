@@ -5,15 +5,15 @@ import java.util.List;
 
 public interface JpaService<T, ID extends Serializable> {
 
-	public T get(ID id);
+	T get(ID id);
 
-	public List<T> list();
+	List<T> list();
 
-	public void delete(ID id);
+	void delete(ID id);
 
-	public T save(T entity);
+	T save(T entity);
 
-	public T saveAndFlush(T entity);
+	T saveAndFlush(T entity);
 
 	void saveAll(List<T> entities);
 

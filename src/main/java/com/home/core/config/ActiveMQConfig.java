@@ -8,8 +8,8 @@ import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.config.SimpleJmsListenerContainerFactory;
 
-@EnableJms
-@Configuration
+//@EnableJms
+//@Configuration
 public class ActiveMQConfig {
 
 	/***************************************************

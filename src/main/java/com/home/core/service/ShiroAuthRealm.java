@@ -2,6 +2,7 @@ package com.home.core.service;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -19,7 +20,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.github.pagehelper.util.StringUtil;
 import com.home.common.entity.ShiroUser;
 import com.home.core.entity.Permission;
 import com.home.core.entity.Role;
@@ -38,7 +38,7 @@ public class ShiroAuthRealm extends AuthorizingRealm {
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
 		String username = (String) authcToken.getPrincipal();
 		User user = null;
-		if (StringUtil.isEmpty(username)) {
+		if (StringUtils.isBlank(username)) {
 			throw new AccountException("请输入用户名");
 		}
 		user = userService.getByLoginName(username);
@@ -63,7 +63,7 @@ public class ShiroAuthRealm extends AuthorizingRealm {
 			shiroUser.setName(user.getName());
 
 			try {
-				if (StringUtil.isNotEmpty(user.getSalt())) {
+				if (StringUtils.isBlank(user.getSalt())) {
 					return new SimpleAuthenticationInfo(shiroUser, user.getPassword(), ByteSource.Util.bytes(user.getSalt()), getName());
 				} else {
 					return new SimpleAuthenticationInfo(shiroUser, user.getPassword(), getName());

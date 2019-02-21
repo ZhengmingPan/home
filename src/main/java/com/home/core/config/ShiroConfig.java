@@ -82,10 +82,10 @@ public class ShiroConfig {
 
 	// 配置自定义的权限登录器
 	@Bean(name = "authRealm")
-	public ShiroAuthRealm authRealm(@Qualifier("hashedCredentialsMatcher") HashedCredentialsMatcher matcher, @Qualifier("cacheManager") EhCacheManager cacheManager) {
+	public ShiroAuthRealm authRealm(@Qualifier("hashedCredentialsMatcher") HashedCredentialsMatcher matcher) {
 		ShiroAuthRealm authRealm = new ShiroAuthRealm();
 		authRealm.setCredentialsMatcher(matcher);
-		authRealm.setCacheManager(cacheManager);
+		authRealm.setCacheManager(cacheManager());
 		return authRealm;
 	}
 
@@ -103,7 +103,6 @@ public class ShiroConfig {
 	}
 
 	// 配置缓存管理
-	@Bean(name = "cacheManager")
 	public EhCacheManager cacheManager() {
 		EhCacheManager cacheManager = new EhCacheManager();
 		cacheManager.setCacheManagerConfigFile(shiroPref.getCacheManagerConfigFile());

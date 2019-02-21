@@ -59,17 +59,6 @@ public class BaseUser extends IdEntity {
 	private List<UserGroup> groups = Lists.newArrayList();
 
 	@Transient
-	public List<String> getRoleCodes() {
-		List<String> roleCodes = new ArrayList<>();
-		if (roles != null && !roles.isEmpty()) {
-			for (Role role : roles) {
-				roleCodes.add(role.getCode());
-			}
-		}
-		return roleCodes;
-	}
-
-	@Transient
 	public List<Long> getRoleIds() {
 		List<Long> roleIds = new ArrayList<>();
 		if (roles != null && !roles.isEmpty()) {

@@ -56,9 +56,6 @@ public class ActiveMQClient {
 	/**
 	 * P2P（Point to Point）模型 <br>
 	 * 延时生产者向默认Queue发送消息
-	 * 
-	 * @param destinationString
-	 *            发送的目的队列
 	 * @param message
 	 *            消息内容
 	 * @throws JMSException
@@ -71,7 +68,7 @@ public class ActiveMQClient {
 	 * P2P（Point to Point）模型 <br>
 	 * 生产者向特定Queue发送消息
 	 * 
-	 * @param destinationString
+	 * @param destinationName
 	 *            发送的目的队列
 	 * @param message
 	 *            消息内容
@@ -85,7 +82,7 @@ public class ActiveMQClient {
 	 * P2P（Point to Point）模型 <br>
 	 * 延时生产者向特定Queue发送消息
 	 * 
-	 * @param destinationString
+	 * @param destinationName
 	 *            发送的目的队列
 	 * @param message
 	 *            消息内容
@@ -112,9 +109,7 @@ public class ActiveMQClient {
 	/**
 	 * Publish/Subscribe(Pub/Sub) 模型 <br>
 	 * 延时发布者向默认Topic发布消息
-	 * 
-	 * @param destinationString
-	 *            发送的目的队列
+	 *
 	 * @param message
 	 *            消息内容
 	 * @param scheduled
@@ -129,7 +124,7 @@ public class ActiveMQClient {
 	 * Publish/Subscribe(Pub/Sub) 模型 <br>
 	 * 立即发布者向特定发布类型消息
 	 * 
-	 * @param destinationString
+	 * @param destinationName
 	 *            发送的目的队列
 	 * @param message
 	 *            消息内容
@@ -143,7 +138,7 @@ public class ActiveMQClient {
 	 * Publish/Subscribe(Pub/Sub) 模型 <br>
 	 * 延时发布者向特定Topic发布消息
 	 * 
-	 * @param destinationString
+	 * @param destinationName
 	 *            发送的目的队列
 	 * @param message
 	 *            消息内容
