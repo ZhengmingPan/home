@@ -31,12 +31,14 @@
 		<commons-dbcp.version>1.4</commons-dbcp.version>
 		<shiro.version>1.2.1</shiro.version>
 		<springfox.version>2.7.0</springfox.version>
-		<de.codecentric.version>1.5.6</de.codecentric.version>
 		<quartz.version>2.2.1</quartz.version>
 		<httpclient.version>4.5.2</httpclient.version>
 		<fastjson.version>1.2.47</fastjson.version>
 		<fastdfs.version>1.27</fastdfs.version>
 		<druid.version>1.1.10</druid.version>
+		<spring-boot-admin.version>RELEASE</spring-boot-admin.version>
+        <docker.image.prefix>home-spring-boot</docker.image.prefix>
+		<guava.version>RELEASE</guava.version>
 	</properties>
 
 	<dependencies>
@@ -139,6 +141,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
 		</dependency>
 		<!-- mysql数据库 -->
 		<dependency>
@@ -183,21 +186,6 @@
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-parameter-names</artifactId>
 		</dependency>
-		<!--<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-server</artifactId>
-			<version>${de.codecentric.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-client</artifactId>
-			<version>${de.codecentric.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-server-ui</artifactId>
-			<version>${de.codecentric.version}</version>
-		</dependency>-->
 		<!-- commons工具 -->
 		<dependency>
 			<groupId>commons-dbcp</groupId>
@@ -260,10 +248,6 @@
 			<artifactId>swagger-spring-boot-starter</artifactId>
 			<version>1.8.0.RELEASE</version>
 		</dependency>
-		<!-- <dependency> <groupId>io.springfox</groupId> <artifactId>springfox-swagger2</artifactId> 
-			<version>${springfox.version}</version> </dependency> <dependency> <groupId>io.springfox</groupId> 
-			<artifactId>springfox-swagger-ui</artifactId> <version>${springfox.version}</version> 
-			</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
@@ -310,6 +294,44 @@
 			<artifactId>quartz-jobs</artifactId>
 			<version>${quartz.version}</version>
 		</dependency>
+
+		<!-- Spring Boot Admin监控应用 -->
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-server</artifactId>
+			<version>${spring-boot-admin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-server-ui</artifactId>
+			<version>${spring-boot-admin.version}</version>
+		</dependency>
+		<!-- Admin Client 端 -->
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+			<version>${spring-boot-admin.version}</version>
+		</dependency>
+
+		<!-- querydsl -->
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-apt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-jpa</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
 	</dependencies>
 
 	<profiles>
@@ -339,6 +361,73 @@
 				<configuration>
 					<!--fork : 如果没有该项配置则devtools不会起作用，即应用不会restart -->
 					<fork>true</fork>
+				</configuration>
+			</plugin>
+
+			<!-- Mybatis Generator  插件 -->
+			<plugin>
+				<groupId>org.mybatis.generator</groupId>
+				<artifactId>mybatis-generator-maven-plugin</artifactId>
+				<version>1.3.5</version>
+				<executions>
+					<execution>
+						<id>Generate Mybatis Artifacts</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<!-- 添加一个mysql的依赖,防止等会找不到driverClass -->
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>5.1.46</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+				<!-- mybatisGenerator 的配置 -->
+				<configuration>
+					<!-- generator 工具配置文件的位置 -->
+					<configurationFile>src/main/resources/mybatis/generatorConfig.xml</configurationFile>
+					<!-- 是否覆盖 -->
+					<overwrite>true</overwrite>
+				</configuration>
+			</plugin>
+
+			<!-- querydsl插件 -->
+			<plugin>
+				<groupId>com.mysema.maven</groupId>
+				<artifactId>apt-maven-plugin</artifactId>
+				<version>1.1.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/generated-sources/java</outputDirectory>
+							<processor>com.querydsl.apt.jpa.JPAAnnotation</processor>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+            <!-- Docker maven 插件 -->
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<configuration>
+					<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+					<dockerDirectory>doc/docker</dockerDirectory>
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
 				</configuration>
 			</plugin>
 		</plugins>
