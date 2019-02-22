@@ -7,6 +7,7 @@ import java.io.InputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.home.common.utils.FastDFSClient;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +28,6 @@ import com.home.common.entity.ResponseResult;
 import com.home.common.utils.DownloadUtils;
 import com.home.core.entity.Annex;
 import com.home.core.service.AnnexService;
-import com.home.core.utils.FastDFSClient;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -93,7 +93,7 @@ public class AnnexEndpoint {
 		File file = new File(root + path);
 		Annex annex = annexService.getByPath(path);
 		String fileName = annex.getName();
-		if (StringUtils.isNotEmpty(annex.getFastdfsUrl())) {
+		if (StringUtils.isNotBlank(annex.getFastdfsUrl())) {
 			try { 
 				InputStream input = FastDFSClient.downloadFileByUrl(annex.getFastdfsUrl());
 				DownloadUtils.downloadByInputStream(input, fileName, request, response);

@@ -36,6 +36,12 @@ public class ShiroConfig {
 	@Autowired
 	private ShiroPreference shiroPref;
 
+
+	@Bean(name = "lifecycleBeanPostProcessor")
+	public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+		return new LifecycleBeanPostProcessor();
+	}
+
 	/**
 	 * 注册DelegatingFilterProxy（Shiro）
 	 */
@@ -49,10 +55,6 @@ public class ShiroConfig {
 		return filterRegistrationBean;
 	}
 
-	@Bean(name = "lifecycleBeanPostProcessor")
-	public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-		return new LifecycleBeanPostProcessor();
-	}
 
 	@Bean(name = "shiroFilter")
 	public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") org.apache.shiro.mgt.SecurityManager manager) {

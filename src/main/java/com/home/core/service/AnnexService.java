@@ -1,16 +1,14 @@
 package com.home.core.service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.home.common.utils.FastDFSClient;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +26,6 @@ import com.home.common.service.JpaServiceImpl;
 import com.home.common.utils.FileUploadUtils;
 import com.home.core.entity.Annex;
 import com.home.core.repository.jpa.AnnexDao;
-import com.home.core.utils.FastDFSClient;
 import com.home.core.web.CoreThreadContext;
 
 @Service
@@ -54,24 +51,15 @@ public class AnnexService extends JpaServiceImpl<Annex, String> {
 	@Transactional(readOnly = false)
 	public Annex upload(byte[] data, String fileName, String objectId, String objectType, String path) {
 		String fileType = FilenameUtils.getExtension(fileName).toLowerCase(Locale.ENGLISH);
-		String filePath = FileUploadUtils.storeFile(data, root, path, fileType);
-
+		Map<String, String> pathmap = FileUploadUtils.storeFile(data, root, path, fileType, fileName);
 		Annex annex = new Annex();
 		annex.setName(fileName);
 		annex.setObjectId(objectId);
 		annex.setObjectType(objectType);
-		annex.setPath(filePath);
+		annex.setPath(pathmap.get("localsystem"));
 		annex.setType(fileType);
-
-		try {
-			String fastdfsUrl = FastDFSClient.uploadByFileByte(fileName, data);
-			annex.setFastdfsUrl(fastdfsUrl);
-		} catch (Exception e) {
-			LOGGER.error("FastDFS 文件上传失败");
-		} finally {
-			annex = save(annex);
-		}
-
+		annex.setFastdfsUrl(pathmap.get("fastdfsurl"));
+		annex = save(annex);
 		return annex;
 	}
 

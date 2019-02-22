@@ -1,24 +1,17 @@
-package com.home.core.utils;
+package com.home.common.utils;
+
+import com.home.core.vo.FastDFSFile;
+import org.apache.commons.io.FilenameUtils;
+import org.csource.common.NameValuePair;
+import org.csource.fastdfs.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
-
-import org.apache.commons.io.FilenameUtils;
-import org.csource.common.NameValuePair;
-import org.csource.fastdfs.ClientGlobal;
-import org.csource.fastdfs.FileInfo;
-import org.csource.fastdfs.ServerInfo;
-import org.csource.fastdfs.StorageClient;
-import org.csource.fastdfs.StorageServer;
-import org.csource.fastdfs.TrackerClient;
-import org.csource.fastdfs.TrackerServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-
-import com.home.core.vo.FastDFSFile;
 
 /**
  * FastDFS分布式文件上传和下载客户端工具类
@@ -57,10 +50,15 @@ public class FastDFSClient {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String uploadByFileByte(String fileName, byte[] data) throws Exception {
+	public static String uploadByFileByte(String fileName, byte[] data) {
 		String fileType = FilenameUtils.getExtension(fileName).toLowerCase(Locale.ENGLISH);
 		FastDFSFile file = new FastDFSFile(fileName, data, fileType);
-		return uploadFile(file);
+		try {
+			return uploadFile(file);
+		} catch (Exception e) {
+			LOGGER.error("FastDFS 文件上传失败");
+			return null;
+		}
 	}
  
 	/**
