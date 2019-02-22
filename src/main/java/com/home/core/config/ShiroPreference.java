@@ -1,12 +1,11 @@
-package com.home.core.vo;
-
-import java.util.LinkedHashMap;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+package com.home.core.config;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+import java.util.LinkedHashMap;
 
 @Getter
 @Setter

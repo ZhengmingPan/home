@@ -1,13 +1,14 @@
 package com.home;
 
 import com.spring4all.swagger.EnableSwagger2Doc;
+import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.jms.annotation.EnableJms;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -21,7 +22,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAsync
 @EnableSwagger2Doc //接口文档生成
 @EnableCaching //缓存
-@EnableJms
+//@EnableJms
+//@EnableAdminServer
 public class HomeApplication {
 
 	private static final Logger logger = LoggerFactory.getLogger(HomeApplication.class);

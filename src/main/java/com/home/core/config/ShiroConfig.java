@@ -4,6 +4,8 @@ import java.util.Map;
 
 import javax.servlet.Filter;
 
+import com.home.core.web.filter.PasswordAuthenFilter;
+import com.home.core.web.filter.SystemLogoutFilter;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
@@ -21,10 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
-import com.home.core.filter.PasswordAuthenFilter;
-import com.home.core.filter.SystemLogoutFilter;
 import com.home.core.service.ShiroAuthRealm;
-import com.home.core.vo.ShiroPreference;
 
 /**
  * shiro的配置类
@@ -95,10 +94,11 @@ public class ShiroConfig {
 
 	// 配置自定义的权限登录器
 	@Bean(name = "authRealm")
-	public ShiroAuthRealm authRealm(@Qualifier("hashedCredentialsMatcher") HashedCredentialsMatcher matcher) {
+	public ShiroAuthRealm authRealm(@Qualifier("hashedCredentialsMatcher") HashedCredentialsMatcher matcher,
+									@Qualifier("ehCacheManager")EhCacheManager ehCacheManager) {
 		ShiroAuthRealm authRealm = new ShiroAuthRealm();
 		authRealm.setCredentialsMatcher(matcher);
-		authRealm.setCacheManager(cacheManager());
+		authRealm.setCacheManager(ehCacheManager);
 		return authRealm;
 	}
 
@@ -116,6 +116,7 @@ public class ShiroConfig {
 	}
 
 	// 配置缓存管理
+	@Bean(name = "ehCacheManager")
 	public EhCacheManager cacheManager() {
 		EhCacheManager cacheManager = new EhCacheManager();
 		cacheManager.setCacheManagerConfigFile(shiroPref.getCacheManagerConfigFile());

@@ -1,4 +1,4 @@
-package com.home.core.vo;
+package com.home.common.utils;
 
 import lombok.Getter;
 import lombok.Setter;
