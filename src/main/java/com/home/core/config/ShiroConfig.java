@@ -11,6 +11,8 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,12 +35,19 @@ import com.home.core.vo.ShiroPreference;
 @Configuration
 public class ShiroConfig {
 
+
+	/**
+	 * Logger
+	 */
+	private static final Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
+
 	@Autowired
 	private ShiroPreference shiroPref;
 
 
 	@Bean(name = "lifecycleBeanPostProcessor")
 	public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+		logger.info("Shiro Beginning LifecycleBeanPostProcessor..... ");
 		return new LifecycleBeanPostProcessor();
 	}
 
@@ -47,6 +56,7 @@ public class ShiroConfig {
 	 */
 	@Bean
 	public FilterRegistrationBean delegatingFilterProxy() {
+		logger.info("Shiro Registering FilterRegistrationBean..... ");
 		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
 		DelegatingFilterProxy proxy = new DelegatingFilterProxy();
 		proxy.setTargetFilterLifecycle(true);
@@ -58,8 +68,8 @@ public class ShiroConfig {
 
 	@Bean(name = "shiroFilter")
 	public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") org.apache.shiro.mgt.SecurityManager manager) {
+		logger.info("Shiro Registering authorized ShiroFilterFactoryBean..... ");
 		ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
-
 		// 配置认证认证过滤器
 		Map<String, Filter> filters = bean.getFilters();
 		filters.put("authc", new PasswordAuthenFilter());
@@ -77,6 +87,7 @@ public class ShiroConfig {
 	// 配置核心安全事务管理器
 	@Bean(name = "securityManager")
 	public SecurityManager securityManager(@Qualifier("authRealm") ShiroAuthRealm authRealm) {
+		logger.info("Shiro Registering core securityManager..... ");
 		DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
 		manager.setRealm(authRealm);
 		return manager;
@@ -120,6 +131,7 @@ public class ShiroConfig {
 
 	@Bean
 	public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(@Qualifier("securityManager") SecurityManager manager) {
+		logger.info("Shiro Registering  AuthorizationAttributeSourceAdvisor..... ");
 		AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
 		advisor.setSecurityManager(manager);
 		return advisor;
