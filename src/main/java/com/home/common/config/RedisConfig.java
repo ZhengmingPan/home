@@ -1,4 +1,4 @@
-package com.home.core.config;
+package com.home.common.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -30,6 +29,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+
 
 import java.time.Duration;
 import java.util.Map;
@@ -159,13 +159,8 @@ public class RedisConfig extends CachingConfigurerSupport {
 	}
 
 
-	/**
-	 * 此内部类就是把peoperties的配置数据，进行读取，创建JedisConnectionFactory和JedisPool，以供外部类初始化缓存管理器使用
-	 * 不了解的同学可以去看@ConfigurationProperties和@Value的作用
-	 **/
-
-	@ConfigurationProperties
-	class DataJedisProperties {
+	class JedisProperties {
+		
 		@Value("${spring.redis.host}")
 		private String host;
 		@Value("${spring.redis.password}")
@@ -202,5 +197,7 @@ public class RedisConfig extends CachingConfigurerSupport {
 			jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
 			return new JedisPool(jedisPoolConfig, host, port, timeout, password);
 		}
+
 	}
+
 }

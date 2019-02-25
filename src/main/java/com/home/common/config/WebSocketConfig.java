@@ -1,7 +1,6 @@
-package com.home.core.config;
+package com.home.common.config;
 
-import java.util.List;
-
+import com.home.core.web.HandshakeInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -11,7 +10,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
-import com.home.core.web.HandshakeInterceptor;
+import java.util.List;
 
 /**
  * websocket消息实时发送

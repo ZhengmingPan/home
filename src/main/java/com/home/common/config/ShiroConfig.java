@@ -1,9 +1,7 @@
-package com.home.core.config;
+package com.home.common.config;
 
-import java.util.Map;
-
-import javax.servlet.Filter;
-
+import com.home.common.config.properties.ShiroProperties;
+import com.home.core.service.ShiroAuthRealm;
 import com.home.core.web.filter.PasswordAuthenFilter;
 import com.home.core.web.filter.SystemLogoutFilter;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -23,7 +21,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
-import com.home.core.service.ShiroAuthRealm;
+import javax.servlet.Filter;
+import java.util.Map;
 
 /**
  * shiro的配置类
@@ -41,7 +40,7 @@ public class ShiroConfig {
 	private static final Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
 
 	@Autowired
-	private ShiroPreference shiroPref;
+	private ShiroProperties shiroPref;
 
 
 	@Bean(name = "lifecycleBeanPostProcessor")
@@ -66,7 +65,7 @@ public class ShiroConfig {
 
 
 	@Bean(name = "shiroFilter")
-	public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") org.apache.shiro.mgt.SecurityManager manager) {
+	public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager) {
 		logger.info("Shiro Registering authorized ShiroFilterFactoryBean..... ");
 		ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
 		// 配置认证认证过滤器

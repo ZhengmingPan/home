@@ -1,4 +1,4 @@
-package com.home.common.utils;
+package com.home.common.utils.prop;
 
 import lombok.Getter;
 import lombok.Setter;

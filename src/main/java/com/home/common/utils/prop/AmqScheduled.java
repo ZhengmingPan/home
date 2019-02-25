@@ -1,4 +1,4 @@
-package com.home.core.utils;
+package com.home.common.utils.prop;
 
 import org.apache.activemq.ScheduledMessage;
 

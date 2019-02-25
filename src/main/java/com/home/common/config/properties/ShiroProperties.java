@@ -1,4 +1,4 @@
-package com.home.core.config;
+package com.home.common.config.properties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 @Setter
 @Component
 @ConfigurationProperties(prefix = "shiro")
-public class ShiroPreference {
+public class ShiroProperties {
 
 	private String loginUrl;
 	private String successUrl;

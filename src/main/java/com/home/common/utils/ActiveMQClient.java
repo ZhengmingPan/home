@@ -1,15 +1,7 @@
-package com.home.core.utils;
+package com.home.common.utils;
 
-import java.io.Serializable;
-
-import javax.jms.DeliveryMode;
-import javax.jms.JMSException;
-
-import org.apache.activemq.ActiveMQConnection;
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.ActiveMQQueueSender;
-import org.apache.activemq.ActiveMQSession;
-import org.apache.activemq.ActiveMQTopicPublisher;
+import com.home.common.utils.prop.AmqScheduled;
+import org.apache.activemq.*;
 import org.apache.activemq.command.ActiveMQDestination;
 import org.apache.activemq.command.ActiveMQObjectMessage;
 import org.apache.activemq.command.ActiveMQQueue;
@@ -19,6 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Component;
+
+import javax.jms.DeliveryMode;
+import javax.jms.JMSException;
+import java.io.Serializable;
 
 
 /**

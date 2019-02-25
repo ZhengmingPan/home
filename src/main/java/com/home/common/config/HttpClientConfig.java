@@ -1,11 +1,6 @@
-package com.home.core.config;
+package com.home.common.config;
 
-import java.io.InterruptedIOException;
-import java.net.UnknownHostException;
-import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.SSLException;
-
+import com.home.common.config.properties.HttpClientProperties;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -20,10 +15,16 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.net.ssl.SSLException;
+import java.io.InterruptedIOException;
+import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 配置Http客户端连接
@@ -34,32 +35,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HttpClientConfig {
 
-	@Value("${httpclient.pool.maxTotal}")
-	private Integer maxTotal;
-
-	@Value("${httpclient.pool.defaultMaxPerRoute}")
-	private Integer defaultMaxPerRoute;
-
-	@Value("${httpclient.pool.connectTimeout}")
-	private Integer connectTimeout;
-
-	@Value("${httpclient.pool.connectionRequestTimeout}")
-	private Integer connectionRequestTimeout;
-
-	@Value("${httpclient.pool.socketTimeout}")
-	private Integer socketTimeout;
-
-	@Value("${httpclient.pool.staleConnectionCheckEnabled}")
-	private Boolean staleConnectionCheckEnabled;
-
-	@Value("${httpclient.pool.retryTime}")
-	private Integer retryTime;
-
-	@Value("${httpclient.pool.timeToLive}")
-	private Long timeToLive;
-
-	@Value("${httpclient.pool.keepAliveTime}")
-	private Integer keepAliveTime;
+	@Autowired
+	private HttpClientProperties httpProp;
 
 	/**
 	 * 首先实例化一个连接池管理器,设置最大连接数和并发连接数
@@ -69,9 +46,9 @@ public class HttpClientConfig {
 	@Bean(name = "httpClientConnectionManager")
 	public PoolingHttpClientConnectionManager getHttpClientConnectionManager() {
 		PoolingHttpClientConnectionManager httpClientConnectionManager = new PoolingHttpClientConnectionManager(
-				timeToLive, TimeUnit.SECONDS);
-		httpClientConnectionManager.setMaxTotal(maxTotal);
-		httpClientConnectionManager.setDefaultMaxPerRoute(defaultMaxPerRoute);
+				httpProp.getTimeToLive(), TimeUnit.SECONDS);
+		httpClientConnectionManager.setMaxTotal(httpProp.getMaxTotal());
+		httpClientConnectionManager.setDefaultMaxPerRoute(httpProp.getDefaultMaxPerRoute());
 		return httpClientConnectionManager;
 	}
 
@@ -143,7 +120,7 @@ public class HttpClientConfig {
 					}
 				}
 			}
-			return keepAliveTime * 1000;
+			return httpProp.getKeepAliveTime() * 1000;
 		};
 	}
 
@@ -173,10 +150,10 @@ public class HttpClientConfig {
 	@Bean(name = "builder")
 	public RequestConfig.Builder getBuilder() {
 		RequestConfig.Builder builder = RequestConfig.custom();
-		return builder.setConnectTimeout(connectTimeout)
-				.setConnectionRequestTimeout(connectionRequestTimeout)
-				.setSocketTimeout(socketTimeout)
-				.setStaleConnectionCheckEnabled(staleConnectionCheckEnabled);
+		return builder.setConnectTimeout(httpProp.getConnectTimeout())
+				.setConnectionRequestTimeout(httpProp.getConnectionRequestTimeout())
+				.setSocketTimeout(httpProp.getSocketTimeout())
+				.setStaleConnectionCheckEnabled(httpProp.getStaleConnectionCheckEnabled());
 	}
 
 	/**

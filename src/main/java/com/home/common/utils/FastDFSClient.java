@@ -1,5 +1,6 @@
 package com.home.common.utils;
 
+import com.home.common.utils.prop.FastDFSFile;
 import org.apache.commons.io.FilenameUtils;
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.*;
