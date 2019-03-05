@@ -7,7 +7,7 @@ import java.io.InputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.home.common.utils.FastDFSClient;
+import com.home.common.utils.FastDFSUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -95,7 +95,7 @@ public class AnnexEndpoint {
 		String fileName = annex.getName();
 		if (StringUtils.isNotBlank(annex.getFastdfsUrl())) {
 			try { 
-				InputStream input = FastDFSClient.downloadFileByUrl(annex.getFastdfsUrl());
+				InputStream input = FastDFSUtils.downloadFileByUrl(annex.getFastdfsUrl());
 				DownloadUtils.downloadByInputStream(input, fileName, request, response);
 			} catch (Exception e) {
 				DownloadUtils.downloadByFile(file, fileName, request, response);

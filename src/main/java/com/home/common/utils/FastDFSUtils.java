@@ -19,9 +19,9 @@ import java.util.Locale;
  * @author Administrator
  *
  */
-public class FastDFSClient {
+public class FastDFSUtils {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(FastDFSClient.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(FastDFSUtils.class);
 
 	private static TrackerClient trackerClient;
 	private static TrackerServer trackerServer;

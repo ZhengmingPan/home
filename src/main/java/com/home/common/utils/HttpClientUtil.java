@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -23,10 +24,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**
@@ -35,37 +33,44 @@ import java.util.Map.Entry;
  * @author Administrator
  *
  */
-@Component
-public class HttpClient {
+public class HttpClientUtil {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(HttpClient.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(HttpClientUtil.class);
 
-	@Autowired
-	private CloseableHttpClient httpClient;
-	@Autowired
-	private RequestConfig requestConfig;
+	private static RequestConfig requestConfig;
 
-	public String doGetString(String url) throws ParseException, IOException {
+
+	static {
+		requestConfig = RequestConfig.custom()
+				.setConnectionRequestTimeout(500)
+				.setSocketTimeout(10000)
+				.setConnectTimeout(1000)
+				.setMaxRedirects(50)
+				.setAuthenticationEnabled(false)
+				.build();
+	}
+
+	public static String doGetString(String url) throws ParseException, IOException {
 		HttpEntity httpEntity = doGet(url, new HashMap<String, String>(), new HashMap<String, String>(), CharEncoding.UTF_8);
 		return EntityUtils.toString(httpEntity, CharEncoding.UTF_8);
 	}
 
-	public String doGetString(String url, Map<String, String> bodyParams) throws ParseException, IOException {
+	public static String doGetString(String url, Map<String, String> bodyParams) throws ParseException, IOException {
 		HttpEntity httpEntity = doGet(url, bodyParams, new HashMap<String, String>(), CharEncoding.UTF_8);
 		return EntityUtils.toString(httpEntity, CharEncoding.UTF_8);
 	}
 
-	public String doGetString(String url, Map<String, String> bodyParams, String charset) throws ParseException, IOException {
+	public static String doGetString(String url, Map<String, String> bodyParams, String charset) throws ParseException, IOException {
 		HttpEntity httpEntity = doGet(url, bodyParams, new HashMap<String, String>(), charset);
 		return EntityUtils.toString(httpEntity, charset);
 	}
 
-	public String doGetString(String url, Map<String, String> bodyParams, Map<String, String> headParams) throws ParseException, IOException {
+	public static String doGetString(String url, Map<String, String> bodyParams, Map<String, String> headParams) throws ParseException, IOException {
 		HttpEntity httpEntity = doGet(url, bodyParams, new HashMap<String, String>(), CharEncoding.UTF_8);
 		return EntityUtils.toString(httpEntity, CharEncoding.UTF_8);
 	}
 
-	public String doGetString(String url, Map<String, String> bodyParams, Map<String, String> headParams, String charset) throws ParseException, IOException {
+	public static String doGetString(String url, Map<String, String> bodyParams, Map<String, String> headParams, String charset) throws ParseException, IOException {
 		HttpEntity httpEntity = doGet(url, bodyParams, headParams, charset);
 		return EntityUtils.toString(httpEntity, charset);
 	}
@@ -83,7 +88,7 @@ public class HttpClient {
 	 *            编码方式 <code>CharEncoding</code>
 	 * @return
 	 */
-	private HttpEntity doGet(String url, Map<String, String> bodyParams, Map<String, String> headParams, String charset) {
+	private static HttpEntity doGet(String url, Map<String, String> bodyParams, Map<String, String> headParams, String charset) {
 		url = buildQuery(url, bodyParams, charset);
 		HttpGet httpGet = new HttpGet(url);
 		httpGet.setConfig(requestConfig);
@@ -94,7 +99,7 @@ public class HttpClient {
 			}
 		}
 		try {
-			CloseableHttpResponse response = httpClient.execute(httpGet);
+			CloseableHttpResponse response = HttpClients.createDefault().execute(httpGet);
 			int status = response.getStatusLine().getStatusCode();
 			HttpEntity entity = response.getEntity();
 			if (status != 200) {
@@ -112,27 +117,27 @@ public class HttpClient {
 		return null;
 	}
 
-	public String doPostString(String url) throws ParseException, IOException {
+	public static String doPostString(String url) throws ParseException, IOException {
 		HttpEntity httpEntity = doPost(url, new HashMap<String, String>(), new HashMap<String, String>(), CharEncoding.UTF_8);
 		return EntityUtils.toString(httpEntity, CharEncoding.UTF_8);
 	}
 
-	public String doPostString(String url, Map<String, String> bodyParams) throws ParseException, IOException {
+	public static String doPostString(String url, Map<String, String> bodyParams) throws ParseException, IOException {
 		HttpEntity httpEntity = doPost(url, bodyParams, new HashMap<String, String>(), CharEncoding.UTF_8);
 		return EntityUtils.toString(httpEntity, CharEncoding.UTF_8);
 	}
 
-	public String doPostString(String url, Map<String, String> bodyParams, String charset) throws ParseException, IOException {
+	public static String doPostString(String url, Map<String, String> bodyParams, String charset) throws ParseException, IOException {
 		HttpEntity httpEntity = doPost(url, bodyParams, new HashMap<String, String>(), charset);
 		return EntityUtils.toString(httpEntity, charset);
 	}
 
-	public String doPostString(String url, Map<String, String> bodyParams, Map<String, String> headParams) throws ParseException, IOException {
+	public static String doPostString(String url, Map<String, String> bodyParams, Map<String, String> headParams) throws ParseException, IOException {
 		HttpEntity httpEntity = doPost(url, bodyParams, new HashMap<String, String>(), CharEncoding.UTF_8);
 		return EntityUtils.toString(httpEntity, CharEncoding.UTF_8);
 	}
 
-	public String doPostString(String url, Map<String, String> bodyParams, Map<String, String> headParams, String charset) throws ParseException, IOException {
+	public static String doPostString(String url, Map<String, String> bodyParams, Map<String, String> headParams, String charset) throws ParseException, IOException {
 		HttpEntity httpEntity = doPost(url, bodyParams, headParams, charset);
 		return EntityUtils.toString(httpEntity, charset);
 	}
@@ -150,7 +155,7 @@ public class HttpClient {
 	 *            编码方式 <code>CharEncoding</code>
 	 * @return
 	 */
-	private HttpEntity doPost(String url, Map<String, String> bodyParams, Map<String, String> headParams, String charset) {
+	private static HttpEntity doPost(String url, Map<String, String> bodyParams, Map<String, String> headParams, String charset) {
 		LOGGER.info("api url:" + url);
 
 		HttpPost httpPost = new HttpPost(url);
@@ -170,7 +175,7 @@ public class HttpClient {
 				}
 			}
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, charset));
-			CloseableHttpResponse response = httpClient.execute(httpPost);
+			CloseableHttpResponse response = HttpClients.createDefault().execute(httpPost);
 			int status = response.getStatusLine().getStatusCode();
 			HttpEntity entity = response.getEntity();
 			if (status != 200) {
@@ -188,27 +193,27 @@ public class HttpClient {
 		return null;
 	}
 	
-	public String doPutString(String url) throws ParseException, IOException {
+	public static String doPutString(String url) throws ParseException, IOException {
 		HttpEntity httpEntity = doPut(url, new HashMap<String, String>(), new HashMap<String, String>(), CharEncoding.UTF_8);
 		return EntityUtils.toString(httpEntity, CharEncoding.UTF_8);
 	}
 
-	public String doPutString(String url, Map<String, String> bodyParams) throws ParseException, IOException {
+	public static String doPutString(String url, Map<String, String> bodyParams) throws ParseException, IOException {
 		HttpEntity httpEntity = doPut(url, bodyParams, new HashMap<String, String>(), CharEncoding.UTF_8);
 		return EntityUtils.toString(httpEntity, CharEncoding.UTF_8);
 	}
 
-	public String doPutString(String url, Map<String, String> bodyParams, String charset) throws ParseException, IOException {
+	public static String doPutString(String url, Map<String, String> bodyParams, String charset) throws ParseException, IOException {
 		HttpEntity httpEntity = doPut(url, bodyParams, new HashMap<String, String>(), charset);
 		return EntityUtils.toString(httpEntity, charset);
 	}
 
-	public String doPutString(String url, Map<String, String> bodyParams, Map<String, String> headParams) throws ParseException, IOException {
+	public static String doPutString(String url, Map<String, String> bodyParams, Map<String, String> headParams) throws ParseException, IOException {
 		HttpEntity httpEntity = doPut(url, bodyParams, new HashMap<String, String>(), CharEncoding.UTF_8);
 		return EntityUtils.toString(httpEntity, CharEncoding.UTF_8);
 	}
 
-	public String doPutString(String url, Map<String, String> bodyParams, Map<String, String> headParams, String charset) throws ParseException, IOException {
+	public static String doPutString(String url, Map<String, String> bodyParams, Map<String, String> headParams, String charset) throws ParseException, IOException {
 		HttpEntity httpEntity = doPut(url, bodyParams, headParams, charset);
 		return EntityUtils.toString(httpEntity, charset);
 	}
@@ -226,7 +231,7 @@ public class HttpClient {
 	 *            编码方式 <code>CharEncoding</code>
 	 * @return
 	 */
-	private HttpEntity doPut(String url, Map<String, String> bodyParams, Map<String, String> headParams, String charset) {
+	private static HttpEntity doPut(String url, Map<String, String> bodyParams, Map<String, String> headParams, String charset) {
 		LOGGER.info("api url:" + url);
 
 		HttpPut httpPut = new HttpPut(url);
@@ -246,7 +251,7 @@ public class HttpClient {
 				}
 			}
 			httpPut.setEntity(new UrlEncodedFormEntity(nvps, charset));
-			CloseableHttpResponse response = httpClient.execute(httpPut);
+			CloseableHttpResponse response = HttpClients.createDefault().execute(httpPut);
 			int status = response.getStatusLine().getStatusCode();
 			HttpEntity entity = response.getEntity();
 			if (status != 200) {
@@ -271,7 +276,7 @@ public class HttpClient {
 	 *            请求参数
 	 * @return 构建query
 	 */
-	private String buildQuery(String url, Map<String, String> params, String charset) {
+	private static String buildQuery(String url, Map<String, String> params, String charset) {
 		LOGGER.info("api url:" + url);
 		if (params == null || params.isEmpty()) {
 			return url;

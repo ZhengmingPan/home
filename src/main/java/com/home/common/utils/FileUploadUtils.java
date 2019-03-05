@@ -11,6 +11,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 
 import com.google.common.io.Files;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * 文件上传
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
  * @author Administrator
  *
  */
+@Component
 public class FileUploadUtils {
 
 	/**
@@ -77,7 +79,7 @@ public class FileUploadUtils {
 		String filepath = storeFile(data, root, path, fileType);
 		pathmap.put("localsystem", filepath);
 		if(isUseFastDFS) {
-			String fastdfsUrl = FastDFSClient.uploadByFileByte(fileName, data);
+			String fastdfsUrl = FastDFSUtils.uploadByFileByte(fileName, data);
 			pathmap.put("fastdfsurl", fastdfsUrl);
 		}
 		return pathmap;

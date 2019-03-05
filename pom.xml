@@ -39,6 +39,7 @@
 		<spring-boot-admin.version>RELEASE</spring-boot-admin.version>
         <docker.image.prefix>home-spring-boot</docker.image.prefix>
 		<guava.version>RELEASE</guava.version>
+        <hadoop.version>3.1.1</hadoop.version>
 	</properties>
 
 	<dependencies>
@@ -253,11 +254,6 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>cn.bestwu</groupId>
-			<artifactId>fastdfs-client-java</artifactId>
-			<version>${fastdfs.version}</version>
-		</dependency> 
 		<!-- HttpClient远程调用接口 -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -314,13 +310,14 @@
 		</dependency>
 
 		<!-- querydsl -->
-		<dependency>
+		<!--<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-core</artifactId>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.querydsl</groupId>
@@ -332,7 +329,49 @@
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
 		</dependency>
-	</dependencies>
+
+        <!-- 分布式文件系统 -->
+        <!-- FastDFS -->
+        <dependency>
+            <groupId>cn.bestwu</groupId>
+            <artifactId>fastdfs-client-java</artifactId>
+            <version>${fastdfs.version}</version>
+        </dependency>
+        <!-- HDFS -->
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>${hadoop.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.xml.bind</groupId>
+					<artifactId>jaxb-impl</artifactId>
+				</exclusion>
+			</exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-hdfs</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+		<!-- Mapreduce -->
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-mapreduce-client-core</artifactId>
+			<version>${hadoop.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-mapreduce-client-jobclient</artifactId>
+			<version>${hadoop.version}</version>
+		</dependency>
+
+    </dependencies>
 
 	<profiles>
 		<profile>
@@ -363,6 +402,7 @@
 					<fork>true</fork>
 				</configuration>
 			</plugin>
+
 
 			<!-- Mybatis Generator  插件 -->
 			<plugin>
@@ -395,7 +435,9 @@
 				</configuration>
 			</plugin>
 
-			<!-- querydsl插件 -->
+			<!-- querydsl插件
+			  生成Q类的方式 pom.xml右键->Maven->Generate Sources And Update Folders
+			-->
 			<plugin>
 				<groupId>com.mysema.maven</groupId>
 				<artifactId>apt-maven-plugin</artifactId>
@@ -407,13 +449,14 @@
 						</goals>
 						<configuration>
 							<outputDirectory>target/generated-sources/java</outputDirectory>
-							<processor>com.querydsl.apt.jpa.JPAAnnotation</processor>
+							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 
-            <!-- Docker maven 插件 -->
+
+			<!-- Docker maven 插件 -->
 			<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>docker-maven-plugin</artifactId>

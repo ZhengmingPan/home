@@ -57,7 +57,7 @@
 
         <!-- JDBC连接配置 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/home"
+                        connectionURL="jdbc:mysql://localhost:3306/springboot"
                         userId="root"
                         password="Gepoint"/>
 

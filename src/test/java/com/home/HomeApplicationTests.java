@@ -11,7 +11,7 @@ public class HomeApplicationTests {
 	
 	
 	@Test
-	public void contextLoads() throws Exception {  
+	public void contextLoads() throws Exception {
 	}
 
 }
