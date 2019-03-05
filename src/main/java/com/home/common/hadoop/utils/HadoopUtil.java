@@ -1,4 +1,4 @@
-package com.home.common.utils;
+package com.home.common.hadoop.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
