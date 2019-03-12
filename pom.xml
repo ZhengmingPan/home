@@ -278,6 +278,12 @@
 			<artifactId>activemq-pool</artifactId>
 			<version>5.14.5</version>
 		</dependency>
+		<!-- rabbitmq -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+
 
 		<!-- quartz任務調度 -->
 		<dependency>
