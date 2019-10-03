@@ -5,8 +5,16 @@ shiro:
    cacheManagerConfigFile: classpath:shiro/shiro-cache.xml
    hashAlgorithmName: SHA-1
    hashIterations: 1024
-   filterChainDefinitionMap:
+   filterChainDefinitionMap: |
       /api/account/login: anon
-      /api/account/logout: anon
+      /api/account/logout: logout
       /api/account/current: anon
-      /api/**: authc
+      /api/**: authc 
+      /v2/**: anon
+      /swagger-resources/**: anon
+      /swagger-ui.html: anon
+      /druid/**: anon 
+      /webjars/**: anon
+      /static/**: anon
+      /logout: logout
+      /**: authc
