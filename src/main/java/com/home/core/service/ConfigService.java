@@ -41,6 +41,11 @@ public class ConfigService extends JpaServiceImpl<Config, Long> {
 
 	public Page<Config> page(final String searchKey, Pageable page) {
 		return configDao.findAll(new Specification<Config>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -7653449304545489581L;
+
 			@Override
 			public Predicate toPredicate(Root<Config> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<>();

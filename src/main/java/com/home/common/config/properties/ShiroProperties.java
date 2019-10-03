@@ -19,6 +19,6 @@ public class ShiroProperties {
 	private String cacheManagerConfigFile;
 	private String hashAlgorithmName;
 	private Integer hashIterations;
-	private LinkedHashMap<String, String> filterChainDefinitionMap;
+	private String filterChainDefinitionMap;
 
 }

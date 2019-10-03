@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.Sets; 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,8 +36,7 @@ import java.util.Set;
 
 /**
  * Redis配置
- */
-@Slf4j
+ */ 
 @Configuration
 public class RedisConfig extends CachingConfigurerSupport {
 

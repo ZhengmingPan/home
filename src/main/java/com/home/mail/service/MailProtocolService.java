@@ -68,6 +68,11 @@ public class MailProtocolService extends JpaServiceImpl<MailProtocol, Long> {
 	
 	public Page<MailProtocol> page( final String searchKey, Pageable pageable) {
 		return mailProtocolDao.findAll(new Specification<MailProtocol>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 2224226692677785395L;
+
 			@Override
 			public Predicate toPredicate(Root<MailProtocol> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = Lists.newArrayList();

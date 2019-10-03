@@ -1,6 +1,6 @@
 package com.home.core.web.filter;
 
-import com.home.common.entity.ResponseResult;
+import com.home.common.http.ResponseResult;
 import com.home.common.utils.RequestUtils;
 import com.home.common.utils.ResponseUtils;
 import org.apache.shiro.session.SessionException;

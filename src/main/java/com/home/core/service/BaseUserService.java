@@ -34,7 +34,10 @@ public class BaseUserService extends JpaServiceImpl<BaseUser, Long> {
 	}
 
 	public Page<BaseUser> pageByRole(final Long roleId, final String searchKey, Pageable page) {
-		return baseUserDao.findAll(new Specification<BaseUser>() {
+		return baseUserDao.findAll(new Specification<BaseUser>() { 
+			
+			private static final long serialVersionUID = -6434132315996246596L;
+
 			@Override
 			public Predicate toPredicate(Root<BaseUser> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<>();
@@ -56,6 +59,11 @@ public class BaseUserService extends JpaServiceImpl<BaseUser, Long> {
 
 	public Page<BaseUser> pageToSearch(final String searchKey, Pageable page) {
 		return baseUserDao.findAll(new Specification<BaseUser>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 5485142749206744506L;
+
 			@Override
 			public Predicate toPredicate(Root<BaseUser> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<>();
@@ -75,6 +83,11 @@ public class BaseUserService extends JpaServiceImpl<BaseUser, Long> {
 
 	public Page<BaseUser> pageByGroup(final Long groupId, final String searchKey, Pageable page) {
 		return baseUserDao.findAll(new Specification<BaseUser>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 3427814871031114309L;
+
 			@Override
 			public Predicate toPredicate(Root<BaseUser> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<>();

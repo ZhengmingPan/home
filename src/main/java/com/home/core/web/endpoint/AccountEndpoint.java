@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.home.common.entity.ResponseResult;
+import com.home.common.http.ResponseResult;
 import com.home.core.entity.BaseUser;
 import com.home.core.service.BaseUserService;
 import com.home.core.service.TokenService;
@@ -70,7 +70,7 @@ public class AccountEndpoint {
 	
 	 @MessageMapping("/welcome") //当浏览器向服务端发送请求时,通过@MessageMapping映射/welcome这个地址,类似于@ResponseMapping
      @SendTo("/topic/getResponse")//当服务器有消息时,会对订阅了@SendTo中的路径的浏览器发送消息
-     public ResponseResult say() { 
+     public ResponseResult<?> say() { 
          return ResponseResult.createError(HttpStatus.ACCEPTED, "websocket");
      }
 

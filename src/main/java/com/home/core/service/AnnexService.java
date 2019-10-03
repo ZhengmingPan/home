@@ -1,7 +1,11 @@
 package com.home.core.service;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -11,8 +15,6 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -30,8 +32,7 @@ import com.home.core.web.CoreThreadContext;
 @Service
 @Transactional(readOnly = true)
 public class AnnexService extends JpaServiceImpl<Annex, String> {
-
-	private static Logger LOGGER = LoggerFactory.getLogger(AnnexService.class);
+ 
 
 	@Value("${upload.folder}")
 	private String root;
@@ -72,6 +73,11 @@ public class AnnexService extends JpaServiceImpl<Annex, String> {
 
 	public Page<Annex> page(final String searchKey, Pageable page) {
 		return annexDao.findAll(new Specification<Annex>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 3617312468071472401L;
+
 			@Override
 			public Predicate toPredicate(Root<Annex> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<>();

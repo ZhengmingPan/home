@@ -30,6 +30,11 @@ public class LogService extends JpaServiceImpl<Log, String> {
 
 	public Page<Log> page(final Date startTime, final Date endTime, final String searchKey, Pageable page) {
 		return logDao.findAll(new Specification<Log>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -5238654513838928648L;
+
 			@Override
 			public Predicate toPredicate(Root<Log> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = Lists.newArrayList();

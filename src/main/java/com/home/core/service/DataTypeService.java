@@ -41,6 +41,11 @@ public class DataTypeService extends JpaServiceImpl<DataType, Long> {
 
 	public Page<DataType> page(final String searchKey, Pageable page) {
 		return dataTypeDao.findAll(new Specification<DataType>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -9182250526439247785L;
+
 			@Override
 			public Predicate toPredicate(Root<DataType> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = new ArrayList<>();

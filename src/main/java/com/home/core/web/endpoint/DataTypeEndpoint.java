@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.home.common.entity.PageQuery;
-import com.home.common.entity.ResponseResult;
+import com.home.common.http.ResponseResult;
 import com.home.core.entity.DataType;
 import com.home.core.service.DataTypeService;
 

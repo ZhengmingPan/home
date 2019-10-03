@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.home.common.entity.PageQuery;
-import com.home.common.entity.ResponseResult;
+import com.home.common.http.ResponseResult;
 import com.home.core.entity.Log;
 import com.home.core.service.LogService;
 

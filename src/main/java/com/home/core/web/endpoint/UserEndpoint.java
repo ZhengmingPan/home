@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.home.common.entity.PageQuery;
-import com.home.common.entity.ResponseResult;
+import com.home.common.http.ResponseResult;
 import com.home.core.entity.Annex;
 import com.home.core.entity.BaseUser;
 import com.home.core.entity.User;

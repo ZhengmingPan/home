@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.home.common.entity.PageQuery;
-import com.home.common.entity.ResponseResult;
+import com.home.common.http.ResponseResult;
 import com.home.mail.entity.MailAccount;
 import com.home.mail.entity.MailMessage;
 import com.home.mail.service.MailAccountService;

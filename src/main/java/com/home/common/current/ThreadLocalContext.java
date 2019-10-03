@@ -10,6 +10,7 @@ public class ThreadLocalContext {
 		contextMap.put(key, value);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T> T get(String key) {
 		return (T) contextMap.get(key);
 	}

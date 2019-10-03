@@ -63,7 +63,7 @@ public class ShiroAuthRealm extends AuthorizingRealm {
 			shiroUser.setName(user.getName());
 
 			try {
-				if (StringUtils.isBlank(user.getSalt())) {
+				if (StringUtils.isNotBlank(user.getSalt())) {
 					return new SimpleAuthenticationInfo(shiroUser, user.getPassword(), ByteSource.Util.bytes(user.getSalt()), getName());
 				} else {
 					return new SimpleAuthenticationInfo(shiroUser, user.getPassword(), getName());

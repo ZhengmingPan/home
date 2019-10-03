@@ -96,6 +96,11 @@ public class MailAccountService extends JpaServiceImpl<MailAccount, Long> {
 	
 	public Page<MailAccount> page(final Long protocolId, final String searchKey, Pageable pageable) {
 		return mailAccountDao.findAll(new Specification<MailAccount>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 6191397061602053219L;
+
 			@Override
 			public Predicate toPredicate(Root<MailAccount> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = Lists.newArrayList();

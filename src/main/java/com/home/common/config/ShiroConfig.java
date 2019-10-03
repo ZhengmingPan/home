@@ -1,5 +1,6 @@
 package com.home.common.config;
 
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.home.common.config.properties.ShiroProperties;
 import com.home.core.service.ShiroAuthRealm;
 import com.home.core.web.filter.PasswordAuthenFilter;
@@ -53,13 +54,15 @@ public class ShiroConfig {
 	 * 注册DelegatingFilterProxy（Shiro）
 	 */
 	@Bean
-	public FilterRegistrationBean delegatingFilterProxy() {
+	public FilterRegistrationBean<DelegatingFilterProxy> delegatingFilterProxy() {
 		logger.info("Shiro Registering FilterRegistrationBean..... ");
-		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+		FilterRegistrationBean<DelegatingFilterProxy> filterRegistrationBean = new FilterRegistrationBean<DelegatingFilterProxy>();
 		DelegatingFilterProxy proxy = new DelegatingFilterProxy();
 		proxy.setTargetFilterLifecycle(true);
 		proxy.setTargetBeanName("shiroFilter");
 		filterRegistrationBean.setFilter(proxy);
+		filterRegistrationBean.setEnabled(true);
+		filterRegistrationBean.addUrlPatterns("/*");
 		return filterRegistrationBean;
 	}
 
@@ -78,7 +81,7 @@ public class ShiroConfig {
 		bean.setSuccessUrl(shiroPref.getSuccessUrl());
 		bean.setUnauthorizedUrl(shiroPref.getUnauthorizedUrl());
 		// 配置访问权限
-		bean.setFilterChainDefinitionMap(shiroPref.getFilterChainDefinitionMap());
+		bean.setFilterChainDefinitions(shiroPref.getFilterChainDefinitionMap());
 		return bean;
 	}
 
@@ -103,8 +106,6 @@ public class ShiroConfig {
 
 	/**
 	 * 密码匹配凭证管理器
-	 * 
-	 * @return
 	 */
 	@Bean(name = "hashedCredentialsMatcher")
 	public HashedCredentialsMatcher hashedCredentialsMatcher() {
@@ -135,6 +136,15 @@ public class ShiroConfig {
 		AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
 		advisor.setSecurityManager(manager);
 		return advisor;
+	}
+
+	/**
+	 * 在thymeleaf中使用shiro的自定义tag
+	 */
+	@Bean(name = "shiroDialect")
+	public ShiroDialect shiroDialect() {
+		logger.info("loading Thymeleaf ShiroDialect");
+		return  new ShiroDialect();
 	}
 
 }

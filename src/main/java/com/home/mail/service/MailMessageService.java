@@ -90,6 +90,11 @@ public class MailMessageService extends JpaServiceImpl<MailMessage, String> {
 
 	public Page<MailMessage> page(final Long accountId, final String searchKey, Pageable pageable) {
 		return mailMessageDao.findAll(new Specification<MailMessage>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 8687781969754812078L;
+
 			@Override
 			public Predicate toPredicate(Root<MailMessage> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = Lists.newArrayList();

@@ -88,6 +88,11 @@ public class UserService extends JpaServiceImpl<User, Long> {
 
 	public Page<User> page(final String loginName, final String name, final String mobile, final String status, final Date startDate, final Date endDate, final String searchKey, Pageable page) {
 		return userDao.findAll(new Specification<User>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 760659420160503842L;
+
 			@Override
 			public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = Lists.newArrayList();

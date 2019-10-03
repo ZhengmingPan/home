@@ -29,6 +29,11 @@ public class RoleService extends JpaServiceImpl<Role, Long> {
 
 	public Page<Role> page(final String searchKey, Pageable page) {
 		return roleDao.findAll(new Specification<Role>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -4693385918767796636L;
+
 			@Override
 			public Predicate toPredicate(Root<Role> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicates = Lists.newArrayList();

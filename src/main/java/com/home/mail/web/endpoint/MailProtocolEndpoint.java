@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.home.common.entity.PageQuery;
-import com.home.common.entity.ResponseResult;
+import com.home.common.http.ResponseResult;
 import com.home.mail.entity.MailProtocol;
 import com.home.mail.service.MailProtocolService;
 
