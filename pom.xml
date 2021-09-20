@@ -30,7 +30,7 @@
 		<commons-fileupload.version>1.4</commons-fileupload.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
-		<shiro.version>1.2.1</shiro.version>
+		<shiro.version>1.8.0</shiro.version>
 		<thymeleaf-extras-shiro.version>2.0.0</thymeleaf-extras-shiro.version>
 		<springfox.version>2.7.0</springfox.version>
 		<quartz.version>2.2.1</quartz.version>
