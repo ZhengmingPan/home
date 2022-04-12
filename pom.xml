@@ -41,7 +41,7 @@
 		<spring-boot-admin.version>RELEASE</spring-boot-admin.version>
 		<docker.image.prefix>home-spring-boot</docker.image.prefix>
 		<guava.version>RELEASE</guava.version>
-		<hadoop.version>3.1.1</hadoop.version>
+		<hadoop.version>3.2.3</hadoop.version>
 	</properties>
 
 	<dependencies>
