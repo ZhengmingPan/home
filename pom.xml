@@ -35,7 +35,7 @@
 		<springfox.version>2.7.0</springfox.version>
 		<quartz.version>2.2.1</quartz.version>
 		<httpclient.version>4.5.2</httpclient.version>
-		<fastjson.version>1.2.47</fastjson.version>
+		<fastjson.version>1.2.83</fastjson.version>
 		<fastdfs.version>1.27</fastdfs.version>
 		<druid.version>1.1.10</druid.version>
 		<spring-boot-admin.version>RELEASE</spring-boot-admin.version>
